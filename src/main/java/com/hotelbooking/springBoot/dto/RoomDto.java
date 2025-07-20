@@ -22,5 +22,5 @@ public class RoomDto {
     private RoomTypeDto roomType;
     private Integer pricePerNight;
     private Integer capacity;
-    private List<Booking> booking;
+//    private List<Booking> booking;
 }

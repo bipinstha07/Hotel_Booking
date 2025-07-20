@@ -20,6 +20,8 @@ public class BookingDto {
     private LocalDate checkInDate;
     private LocalDate checkOutDate;
     private LocalDate bookingCreated;
+    private Integer totalPrice;
+
     private Room room;
 
 }
