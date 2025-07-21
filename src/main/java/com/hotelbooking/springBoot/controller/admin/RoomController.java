@@ -5,6 +5,7 @@ import com.hotelbooking.springBoot.dto.RoomDto;
 import com.hotelbooking.springBoot.service.BookingServiceImp;
 import com.hotelbooking.springBoot.service.RoomInterface;
 import com.hotelbooking.springBoot.service.RoomServiceImp;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public class RoomController {
     private RoomInterface roomInterface;
 
     @PostMapping("/create")
-    public ResponseEntity<RoomDto> createBooking(@RequestBody RoomDto roomDto){
+    public ResponseEntity<RoomDto> createBooking(@Valid  @RequestBody RoomDto roomDto){
        RoomDto roomDto1 = roomInterface.add(roomDto);
         return  new ResponseEntity<>(roomDto1, HttpStatus.CREATED);
     }

@@ -16,12 +16,13 @@ import java.time.LocalDate;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
 
     @Column(unique = true)
     private String email;
+
     private String password;
     private String number;
     private String address;

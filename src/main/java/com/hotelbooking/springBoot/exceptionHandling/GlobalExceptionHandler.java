@@ -3,6 +3,7 @@ package com.hotelbooking.springBoot.exceptionHandling;
 import com.hotelbooking.springBoot.dto.ErrorResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -36,6 +37,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorResponseDto> handleResourceNotFoundException(ResourceNotFoundException exception){
         ErrorResponseDto errorResponse= new ErrorResponseDto(exception.getMessage(),400,false);
         return  new ResponseEntity<>(errorResponse,HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    public ResponseEntity<ErrorResponseDto> handleHttpMessageNotReadableException(HttpMessageNotReadableException exception){
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto("Message Not Readable",400,false);
+        return new ResponseEntity<>(errorResponseDto,HttpStatus.BAD_REQUEST);
     }
 
 

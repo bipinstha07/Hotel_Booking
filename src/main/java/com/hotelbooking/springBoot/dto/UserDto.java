@@ -16,11 +16,18 @@ import java.time.LocalDate;
 public class UserDto {
 
     private Long id;
+
+    @NotBlank(message = "Name is required")
     private String name;
 
-    @Email(message = "Invalid Email Format")
+    @NotBlank(message = "Email is required")
+    @Pattern(
+            regexp = "^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,6}$",
+            message = "Invalid email format"
+    )
     private String email;
 
+    @NotBlank
     @Size(min = 5, message = "Length must be greater than 5")
     private String password;
 
