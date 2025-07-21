@@ -23,6 +23,7 @@ public class Booking {
     private LocalDate checkInDate;
     private LocalDate checkOutDate;
     private LocalDate bookingCreated;
+    private Integer totalPrice;
 
     @ManyToOne
     private Room room;

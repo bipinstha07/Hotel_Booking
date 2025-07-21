@@ -22,6 +22,6 @@ public class BookingDto {
     private LocalDate bookingCreated;
     private Integer totalPrice;
 
-    private Room room;
+    private RoomDto room;
 
 }

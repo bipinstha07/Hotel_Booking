@@ -45,5 +45,11 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(errorResponseDto,HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(TimeConflictException.class)
+    public ResponseEntity<ErrorResponseDto> handleTimeConflictException(TimeConflictException exception){
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto(exception.getMessage(),400,false);
+        return new ResponseEntity<>(errorResponseDto,HttpStatus.BAD_REQUEST);
+    }
+
 
 }
