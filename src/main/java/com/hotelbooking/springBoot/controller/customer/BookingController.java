@@ -1,7 +1,7 @@
 package com.hotelbooking.springBoot.controller.customer;
 
 import com.hotelbooking.springBoot.dto.BookingDto;
-import com.hotelbooking.springBoot.service.BookingServiceImp;
+import com.hotelbooking.springBoot.service.BookingInterface;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 public class BookingController {
 
-    private BookingServiceImp bookingServiceImp;
+    private BookingInterface bookingInterface;
 
     @PostMapping("/create")
     public ResponseEntity<BookingDto> createBooking(@RequestBody BookingDto bookingDto){
-       BookingDto savedBookingDto = bookingServiceImp.addBooking(bookingDto);
+       BookingDto savedBookingDto = bookingInterface.addBooking(bookingDto);
         return  new ResponseEntity<>(savedBookingDto, HttpStatus.CREATED);
     }
 }

@@ -1,5 +1,7 @@
 package com.hotelbooking.springBoot.entity;
 
 public enum RoomType {
-    AC,DELUXE,NORMAL
+    SINGLE_AC,SINGLE_DELUXE,SINGLE_NORMAL,
+    DOUBLE_AC,DOUBLE_DELUXE,DOUBLE_NORMAL,
+    FOUR_SEATER_AC,FOUR_SEATER_DELUXE,FOUR_SEATER_NORMAL
 }

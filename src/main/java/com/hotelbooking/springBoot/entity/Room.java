@@ -15,6 +15,7 @@ import java.util.List;
 public class Room {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @Enumerated(EnumType.STRING)
