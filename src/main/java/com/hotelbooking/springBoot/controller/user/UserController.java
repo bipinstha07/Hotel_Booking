@@ -7,10 +7,10 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/user")
@@ -19,8 +19,8 @@ public class UserController {
     private UserInterface userInterface;
 
     @PostMapping("/create")
-    public ResponseEntity<UserDto> create(@Valid @RequestBody UserDto userDto){
-        return new ResponseEntity<>(userInterface.create(userDto), HttpStatus.CREATED);
+    public ResponseEntity<UserDto> create(@Valid @RequestBody UserDto userDto, @RequestParam("image") MultipartFile image) throws IOException {
+        return new ResponseEntity<>(userInterface.create(userDto,image), HttpStatus.CREATED);
     }
 
 }

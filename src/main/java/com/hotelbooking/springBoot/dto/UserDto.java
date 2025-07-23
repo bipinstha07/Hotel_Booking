@@ -15,7 +15,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 public class UserDto {
 
-    private Long id;
+    private String id;
 
     @NotBlank(message = "Name is required")
     private String name;
@@ -36,4 +36,6 @@ public class UserDto {
     private String address;
     private LocalDate dateOfBirth;
     private RoleDto role;
+
+    private String userImage;
 }
