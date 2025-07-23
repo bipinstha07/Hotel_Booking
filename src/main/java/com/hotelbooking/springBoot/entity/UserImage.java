@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @Entity
 public class UserImage {
     @Id
-    private String Id;
+    private String id;
     private String fileName;
     private String fileType;
     private Long size;

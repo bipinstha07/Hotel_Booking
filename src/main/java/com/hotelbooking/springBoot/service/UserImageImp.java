@@ -7,6 +7,8 @@ import com.hotelbooking.springBoot.entity.User;
 import com.hotelbooking.springBoot.entity.UserImage;
 import com.hotelbooking.springBoot.repository.UserImageRepo;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -22,7 +24,7 @@ import java.util.UUID;
 @Service
 public class UserImageImp implements UserImageInterface{
 
-    @Value("{userImage.file.path}")
+    @Value("${userImage.file.path}")
     private String imagePath;
 
     @Autowired
@@ -31,27 +33,25 @@ public class UserImageImp implements UserImageInterface{
     @Autowired
     private UserImageRepo userImageRepo;
 
+    private Logger logger = LoggerFactory.getLogger(UserImageImp.class);
+
 
 
     @Override
-    public UserImageDto upload(MultipartFile file, String userId) throws IOException {
+    public UserImage upload(MultipartFile file, String userId) throws IOException {
 
         if(!Files.exists(Paths.get(imagePath))){
             Files.createDirectories(Paths.get(imagePath));
         }
-
-        String fullFileName = imagePath+ file.getName();
+        String fullFileName = imagePath+ file.getOriginalFilename();
         Files.copy(file.getInputStream(),Paths.get(fullFileName), StandardCopyOption.REPLACE_EXISTING);
         UserImageDto userImageDto = new UserImageDto();
         userImageDto.setId(UUID.randomUUID().toString());
         userImageDto.setFileName(fullFileName);
         userImageDto.setFileType(file.getContentType());
         userImageDto.setSize(file.getSize());
-        userImageDto.setUser(userId);
-
         UserImage userImage = modelMapper.map(userImageDto,UserImage.class);
-        userImageRepo.save(userImage);
-        return userImageDto;
+        return  userImage;
     }
 
     @Override

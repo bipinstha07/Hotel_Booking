@@ -14,10 +14,9 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
 public class UserImageDto {
-    @Id
-    private String Id;
+
+    private String id;
     private String fileName;
     private String fileType;
     private Long size;

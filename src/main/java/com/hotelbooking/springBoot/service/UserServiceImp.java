@@ -3,6 +3,7 @@ package com.hotelbooking.springBoot.service;
 import com.hotelbooking.springBoot.dto.RoleDto;
 import com.hotelbooking.springBoot.dto.UserDto;
 import com.hotelbooking.springBoot.entity.User;
+import com.hotelbooking.springBoot.entity.UserImage;
 import com.hotelbooking.springBoot.repository.UserRepo;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -24,12 +25,14 @@ public class UserServiceImp implements UserInterface{
     public UserDto create(UserDto userDto, MultipartFile image) throws IOException {
         userDto.setRole(RoleDto.CUSTOMER);
         userDto.setId(UUID.randomUUID().toString());
-        userImageInterface.upload(image,userDto.getId());
+        UserImage userImage= userImageInterface.upload(image,userDto.getId());
 
         User user = modelMapper.map(userDto,User.class);
+        user.setUserImage(userImage);
+        userImage.setUser(user);
         User savedUser = userRepo.save(user);
-
-
-        return modelMapper.map(savedUser,UserDto.class);
+        UserDto savedUserDto = modelMapper.map(savedUser,UserDto.class);
+        savedUserDto.setUserImage(userImage.getId());
+        return savedUserDto;
     }
 }
