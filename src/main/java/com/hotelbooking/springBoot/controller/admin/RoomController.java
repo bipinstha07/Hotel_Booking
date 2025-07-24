@@ -26,6 +26,16 @@ public class RoomController {
         return  new ResponseEntity<>(roomDto1, HttpStatus.CREATED);
     }
 
+    @PostMapping("/getById/{roomId}")
+    public ResponseEntity<RoomDto> getById(@PathVariable String roomId){
+        return new ResponseEntity<>(roomInterface.getById(roomId),HttpStatus.OK);
+    }
+
+    @PostMapping("/deleteById/{roomId}")
+    public ResponseEntity<String> deleteById(@PathVariable String roomId){
+        roomInterface.delete(roomId);
+        return new ResponseEntity<>("Deletion Success",HttpStatus.OK);
+    }
 
     @GetMapping("/getAll")
     public ResponseEntity<List<RoomDto>> getAll(){

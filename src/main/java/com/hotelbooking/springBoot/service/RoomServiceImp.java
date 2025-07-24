@@ -37,6 +37,8 @@ public class RoomServiceImp implements RoomInterface{
         return allRoomDto;
     }
 
+
+
     @Override
     public RoomDto updateById(String roomId,RoomDto roomDto) {
         Room room = roomRepo.findById(roomId).orElseThrow(()->new ResourceNotFoundException("No Room Found"));
@@ -46,5 +48,18 @@ public class RoomServiceImp implements RoomInterface{
        room.setRoomType(r);
        return modelMapper.map(roomRepo.save(room),RoomDto.class);
     }
+
+    @Override
+    public void delete(String roomId) {
+        Room room = roomRepo.findById(roomId).orElseThrow(()-> new ResourceNotFoundException("No Room Found"));
+        roomRepo.delete(room);
+    }
+
+    @Override
+    public RoomDto getById(String roomId) {
+        Room room = roomRepo.findById(roomId).orElseThrow(()-> new ResourceNotFoundException("No Room Found"));
+        return modelMapper.map(room,RoomDto.class);
+    }
+
 
 }

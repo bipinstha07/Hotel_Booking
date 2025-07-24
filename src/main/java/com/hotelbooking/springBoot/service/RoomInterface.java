@@ -8,4 +8,6 @@ public interface RoomInterface {
     RoomDto add(RoomDto roomDto);
     List<RoomDto> getAll();
     RoomDto updateById(String roomId,RoomDto roomDto);
+    void delete(String roomId);
+    RoomDto getById(String roomId);
 }
