@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/admin/room")
 @AllArgsConstructor
@@ -24,6 +26,16 @@ public class RoomController {
         return  new ResponseEntity<>(roomDto1, HttpStatus.CREATED);
     }
 
+
+    @GetMapping("/getAll")
+    public ResponseEntity<List<RoomDto>> getAll(){
+        return new ResponseEntity<>(roomInterface.getAll(),HttpStatus.OK);
+    }
+
+    @PutMapping("/update/{roomId}")
+    public ResponseEntity<RoomDto> updateById(@PathVariable String roomId,@RequestBody RoomDto roomDto){
+        return new ResponseEntity<>(roomInterface.updateById(roomId,roomDto),HttpStatus.CREATED);
+    }
 
 
 }

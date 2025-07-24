@@ -2,6 +2,8 @@ package com.hotelbooking.springBoot.service;
 
 import com.hotelbooking.springBoot.dto.RoomDto;
 import com.hotelbooking.springBoot.entity.Room;
+import com.hotelbooking.springBoot.entity.RoomType;
+import com.hotelbooking.springBoot.exceptionHandling.ResourceNotFoundException;
 import com.hotelbooking.springBoot.repository.RoomRepo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,10 +33,18 @@ public class RoomServiceImp implements RoomInterface{
     @Override
     public List<RoomDto> getAll() {
         List<Room> allRoom = roomRepo.findAll();
-        List<RoomDto> allRoomDto = allRoom.stream().map((room)->{
-           return modelMapper.map(room,RoomDto.class);
-        }).toList();
+        List<RoomDto> allRoomDto = allRoom.stream().map((room)-> modelMapper.map(room,RoomDto.class)).toList();
         return allRoomDto;
+    }
+
+    @Override
+    public RoomDto updateById(String roomId,RoomDto roomDto) {
+        Room room = roomRepo.findById(roomId).orElseThrow(()->new ResourceNotFoundException("No Room Found"));
+       room.setCapacity(roomDto.getCapacity());
+       room.setPricePerNight(roomDto.getPricePerNight());
+       RoomType r = RoomType.valueOf(roomDto.getRoomType());
+       room.setRoomType(r);
+       return modelMapper.map(roomRepo.save(room),RoomDto.class);
     }
 
 }
