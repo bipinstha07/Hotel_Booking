@@ -1,13 +1,13 @@
 package com.hotelbooking.springBoot.dto;
 
-import com.hotelbooking.springBoot.entity.Room;
-import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -19,7 +19,7 @@ public class BookingDto {
     private String customerEmail;
     private LocalDate checkInDate;
     private LocalDate checkOutDate;
-    private LocalDate bookingCreated;
+    private LocalDateTime bookingCreated = LocalDateTime.now();
     private Integer totalPrice;
 
     private RoomDto room;

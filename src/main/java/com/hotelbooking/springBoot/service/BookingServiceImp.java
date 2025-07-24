@@ -13,6 +13,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -38,5 +39,16 @@ public BookingDto addBooking(BookingDto bookingDto){
         bookingDto1.setRoom(modelMapper.map(room, RoomDto.class));
         return bookingDto1;
     }
+
+    @Override
+    public List<BookingDto> getAll() {
+      List<Booking> booking =  bookingRepo.findAll();
+      List<BookingDto> bookingDtos = booking.stream().map((book)->{
+         return modelMapper.map(book,BookingDto.class);
+      }).toList();
+
+      return bookingDtos;
+    }
+
 
 }

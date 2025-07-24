@@ -9,6 +9,8 @@ import lombok.Setter;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @Getter
 @Setter
@@ -24,6 +26,15 @@ public class RoomServiceImp implements RoomInterface{
         Room savedRoomEntity  = roomRepo.save(roomEntity);
         return  modelMapper.map(savedRoomEntity,RoomDto.class);
 
+    }
+
+    @Override
+    public List<RoomDto> getAll() {
+        List<Room> allRoom = roomRepo.findAll();
+        List<RoomDto> allRoomDto = allRoom.stream().map((room)->{
+           return modelMapper.map(room,RoomDto.class);
+        }).toList();
+        return allRoomDto;
     }
 
 }
