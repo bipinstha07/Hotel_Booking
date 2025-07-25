@@ -43,15 +43,33 @@ public class UserImageImp implements UserImageInterface{
         if(!Files.exists(Paths.get(imagePath))){
             Files.createDirectories(Paths.get(imagePath));
         }
-        String fullFileName = imagePath+ file.getOriginalFilename();
-        Files.copy(file.getInputStream(),Paths.get(fullFileName), StandardCopyOption.REPLACE_EXISTING);
-        UserImageDto userImageDto = new UserImageDto();
-        userImageDto.setId(UUID.randomUUID().toString());
-        userImageDto.setFileName(fullFileName);
-        userImageDto.setFileType(file.getContentType());
-        userImageDto.setSize(file.getSize());
-        UserImage userImage = modelMapper.map(userImageDto,UserImage.class);
-        return  userImage;
+
+        if (file == null || file.isEmpty()) {
+            // skip saving or set default image
+            UserImage userImage = new UserImage();;
+            userImage.setId(UUID.randomUUID().toString());
+            userImage.setSize(null);
+            userImage.setFileType("null");
+            userImage.setFileName("NoImage");
+
+            return userImage;
+        }
+
+        else{
+            String fullFileName = imagePath+ file.getOriginalFilename();
+            Files.copy(file.getInputStream(),Paths.get(fullFileName), StandardCopyOption.REPLACE_EXISTING);
+            UserImageDto userImageDto = new UserImageDto();
+            userImageDto.setId(UUID.randomUUID().toString());
+            userImageDto.setFileName(fullFileName);
+            userImageDto.setFileType(file.getContentType());
+            userImageDto.setSize(file.getSize());
+            UserImage userImage = modelMapper.map(userImageDto,UserImage.class);
+            return  userImage;
+        }
+
+// proceed to Files.copy(...)
+
+
     }
 
     @Override

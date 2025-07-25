@@ -7,7 +7,6 @@ import com.hotelbooking.springBoot.dto.RoomDto;
 import com.hotelbooking.springBoot.dto.UserDto;
 import com.hotelbooking.springBoot.service.RoomInterface;
 import com.hotelbooking.springBoot.service.UserInterface;
-import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -18,7 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:5174")
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/user")
 @AllArgsConstructor
@@ -30,7 +29,7 @@ public class UserController {
     @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<UserDto> create(
             @RequestPart("userDto") String userDto,
-            @RequestPart("image") MultipartFile image
+            @RequestPart(value = "image", required = false) MultipartFile image
     ) throws IOException
 
     {
