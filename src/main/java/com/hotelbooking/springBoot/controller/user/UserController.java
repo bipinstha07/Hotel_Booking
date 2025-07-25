@@ -18,7 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "http://localhost:5174")
 @RestController
 @RequestMapping("/user")
 @AllArgsConstructor
@@ -39,6 +39,12 @@ public class UserController {
         UserDto userDto1 = mapper.readValue(userDto, UserDto.class);
         return new ResponseEntity<>(userInterface.create(userDto1,image), HttpStatus.CREATED);
     }
+
+    @GetMapping("/{getUserById}")
+    public ResponseEntity<UserDto> getById(@PathVariable String getUserById) {
+        return new ResponseEntity<>(userInterface.getUserById(getUserById), HttpStatus.OK);
+    }
+
 
     @GetMapping("/rooms")
     public ResponseEntity<List<RoomDto>> getAllRoom(){

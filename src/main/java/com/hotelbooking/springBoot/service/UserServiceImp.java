@@ -4,6 +4,7 @@ import com.hotelbooking.springBoot.dto.RoleDto;
 import com.hotelbooking.springBoot.dto.UserDto;
 import com.hotelbooking.springBoot.entity.User;
 import com.hotelbooking.springBoot.entity.UserImage;
+import com.hotelbooking.springBoot.exceptionHandling.ResourceNotFoundException;
 import com.hotelbooking.springBoot.repository.UserRepo;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -34,5 +35,10 @@ public class UserServiceImp implements UserInterface{
         UserDto savedUserDto = modelMapper.map(savedUser,UserDto.class);
         savedUserDto.setUserImage(userImage.getId());
         return savedUserDto;
+    }
+
+    @Override
+    public UserDto getUserById(String userId) {
+       return modelMapper.map(userRepo.findUserById(userId),UserDto.class);
     }
 }

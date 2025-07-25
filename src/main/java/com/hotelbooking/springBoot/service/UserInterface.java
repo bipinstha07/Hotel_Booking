@@ -7,5 +7,5 @@ import java.io.IOException;
 
 public interface UserInterface {
     UserDto create(UserDto userDto, MultipartFile file) throws IOException;
-
+    UserDto getUserById(String userId);
 }
