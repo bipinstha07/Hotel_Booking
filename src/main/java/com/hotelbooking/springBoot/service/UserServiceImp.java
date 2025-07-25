@@ -39,6 +39,11 @@ public class UserServiceImp implements UserInterface{
 
     @Override
     public UserDto getUserById(String userId) {
-       return modelMapper.map(userRepo.findUserById(userId),UserDto.class);
+        User user = userRepo.findUserById(userId);
+        if (user == null) {
+            throw new ResourceNotFoundException("No User Found");
+        }
+        return modelMapper.map(user, UserDto.class);
     }
+
 }
