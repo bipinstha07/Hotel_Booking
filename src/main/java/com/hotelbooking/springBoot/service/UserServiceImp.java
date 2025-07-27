@@ -31,6 +31,7 @@ public class UserServiceImp implements UserInterface{
     public UserDto create(UserDto userDto, MultipartFile image) throws IOException {
         userDto.setRole(RoleDto.CUSTOMER);
         userDto.setId(UUID.randomUUID().toString());
+
         UserImage userImage= userImageInterface.upload(image,userDto.getId());
 
         User user = modelMapper.map(userDto,User.class);
@@ -53,24 +54,29 @@ public class UserServiceImp implements UserInterface{
 
     @Override
     public UserImageWithResource getUserWithImageById(String userId) throws MalformedURLException {
-            User user = userRepo.findUserById(userId);
-            UserImage userImage = user.getUserImage();
 
-            Path path = Paths.get(userImage.getFileName());
+        User user = userRepo.findUserById(userId);
+        if (user == null) throw new ResourceNotFoundException("User not found");
+        UserImage userImage = user.getUserImage();
+
+        Path path;
+
+        if(!userImage.isActualImage()){
+            path = Path.of("uploads/userImage/1745900042295.jpeg");
+        }
+
+        else{
+            path = Paths.get(userImage.getFileName());
+        }
 
 
-            if(!Files.exists(path)){
-                throw new ResourceNotFoundException("No Path found for image");
+        if(!Files.exists(path)){
+            throw new ResourceNotFoundException("No Path found for image");
+        }
 
+        UrlResource urlResource =  new UrlResource(path.toUri());
+        return new UserImageWithResource(modelMapper.map(userImage,UserImageDto.class), urlResource);
 
-            }
-            UserDataWithImageDto userDataWithImageDto = new UserDataWithImageDto();
-            userDataWithImageDto.setUserDto(modelMapper.map(user,UserDto.class));
-            userDataWithImageDto.setUserImageDto(modelMapper.map(userImage, UserImageDto.class));
-
-            UrlResource urlResource =  new UrlResource(path.toUri());
-
-            return new UserImageWithResource(userDataWithImageDto, urlResource);
 
         }
 

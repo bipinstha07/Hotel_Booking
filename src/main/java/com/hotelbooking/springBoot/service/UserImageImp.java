@@ -35,8 +35,6 @@ public class UserImageImp implements UserImageInterface{
 
     private Logger logger = LoggerFactory.getLogger(UserImageImp.class);
 
-
-
     @Override
     public UserImage upload(MultipartFile file, String userId) throws IOException {
 
@@ -49,9 +47,9 @@ public class UserImageImp implements UserImageInterface{
             UserImage userImage = new UserImage();;
             userImage.setId(UUID.randomUUID().toString());
             userImage.setSize(null);
-            userImage.setFileType("null");
+            userImage.setFileType("image/jpeg");
             userImage.setFileName("NoImage");
-
+            userImage.setActualImage(false);
             return userImage;
         }
 
@@ -61,6 +59,7 @@ public class UserImageImp implements UserImageInterface{
             UserImageDto userImageDto = new UserImageDto();
             userImageDto.setId(UUID.randomUUID().toString());
             userImageDto.setFileName(fullFileName);
+            userImageDto.setActualImage(true);
             userImageDto.setFileType(file.getContentType());
             userImageDto.setSize(file.getSize());
             UserImage userImage = modelMapper.map(userImageDto,UserImage.class);

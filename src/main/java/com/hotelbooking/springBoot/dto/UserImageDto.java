@@ -16,13 +16,12 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class UserImageDto {
 
-
     private String id;
     private String fileName;
     private String fileType;
     private Long size;
     private LocalDateTime uploadedTime = LocalDateTime.now();
-
+    private boolean isActualImage;
     private String user;
 
 }

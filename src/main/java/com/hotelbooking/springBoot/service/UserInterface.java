@@ -1,6 +1,5 @@
 package com.hotelbooking.springBoot.service;
 
-import com.hotelbooking.springBoot.dto.UserDataWithImageDto;
 import com.hotelbooking.springBoot.dto.UserDto;
 import com.hotelbooking.springBoot.dto.UserImageWithResource;
 import org.springframework.web.multipart.MultipartFile;

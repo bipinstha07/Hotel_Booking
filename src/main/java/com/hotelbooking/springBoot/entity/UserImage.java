@@ -23,7 +23,7 @@ public class UserImage {
     private String fileType;
     private Long size;
     private LocalDateTime uploadedTime = LocalDateTime.now();
-
+    private boolean isActualImage;
     @OneToOne(mappedBy = "userImage")
     private User user;
 
