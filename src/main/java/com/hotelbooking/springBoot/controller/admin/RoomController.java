@@ -1,16 +1,17 @@
 package com.hotelbooking.springBoot.controller.admin;
 
-import com.hotelbooking.springBoot.dto.BookingDto;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hotelbooking.springBoot.dto.RoomDto;
-import com.hotelbooking.springBoot.service.BookingServiceImp;
-import com.hotelbooking.springBoot.service.RoomInterface;
-import com.hotelbooking.springBoot.service.RoomServiceImp;
+import com.hotelbooking.springBoot.service.room.RoomInterface;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -20,9 +21,10 @@ public class RoomController {
 
     private RoomInterface roomInterface;
 
-    @PostMapping("/create")
-    public ResponseEntity<RoomDto> createBooking(@Valid  @RequestBody RoomDto roomDto){
-       RoomDto roomDto1 = roomInterface.add(roomDto);
+    @PostMapping(value = "/create",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<RoomDto> createBooking(@RequestPart  String roomdata,  @RequestPart(value = "image", required = false) List<MultipartFile> image) throws IOException {
+        RoomDto roomDto = new ObjectMapper().readValue(roomdata, RoomDto.class);
+        RoomDto roomDto1 = roomInterface.add(image,roomDto);
         return  new ResponseEntity<>(roomDto1, HttpStatus.CREATED);
     }
 

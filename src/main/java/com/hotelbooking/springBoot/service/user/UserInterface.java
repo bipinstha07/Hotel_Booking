@@ -1,4 +1,4 @@
-package com.hotelbooking.springBoot.service;
+package com.hotelbooking.springBoot.service.user;
 
 import com.hotelbooking.springBoot.dto.UserDto;
 import com.hotelbooking.springBoot.dto.UserImageWithResource;

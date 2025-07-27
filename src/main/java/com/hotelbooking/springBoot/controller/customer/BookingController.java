@@ -1,7 +1,7 @@
 package com.hotelbooking.springBoot.controller.customer;
 
 import com.hotelbooking.springBoot.dto.BookingDto;
-import com.hotelbooking.springBoot.service.BookingInterface;
+import com.hotelbooking.springBoot.service.booking.BookingInterface;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

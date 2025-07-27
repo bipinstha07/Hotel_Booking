@@ -5,10 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.hotelbooking.springBoot.dto.RoomDto;
 import com.hotelbooking.springBoot.dto.UserDto;
-import com.hotelbooking.springBoot.dto.UserImageWithResource;
-import com.hotelbooking.springBoot.entity.UserImage;
-import com.hotelbooking.springBoot.service.RoomInterface;
-import com.hotelbooking.springBoot.service.UserInterface;
+import com.hotelbooking.springBoot.service.room.RoomInterface;
+import com.hotelbooking.springBoot.service.user.UserInterface;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
@@ -58,8 +56,6 @@ public class UserController {
                 .body(userInterface.getUserWithImageById(getUserById).resource());
 
     }
-
-
 
 
     @GetMapping("/rooms")

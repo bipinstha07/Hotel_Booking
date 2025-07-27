@@ -1,9 +1,7 @@
-package com.hotelbooking.springBoot.service;
+package com.hotelbooking.springBoot.service.user;
 
-import com.hotelbooking.springBoot.dto.UserDto;
 import com.hotelbooking.springBoot.dto.UserImageDto;
 import com.hotelbooking.springBoot.dto.UserImageWithResource;
-import com.hotelbooking.springBoot.entity.User;
 import com.hotelbooking.springBoot.entity.UserImage;
 import com.hotelbooking.springBoot.repository.UserImageRepo;
 import org.modelmapper.ModelMapper;
@@ -14,7 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -22,7 +19,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 
 @Service
-public class UserImageImp implements UserImageInterface{
+public class UserImageImp implements UserImageInterface {
 
     @Value("${userImage.file.path}")
     private String imagePath;

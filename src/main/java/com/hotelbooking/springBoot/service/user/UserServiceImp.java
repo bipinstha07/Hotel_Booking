@@ -1,11 +1,10 @@
-package com.hotelbooking.springBoot.service;
+package com.hotelbooking.springBoot.service.user;
 
 import com.hotelbooking.springBoot.dto.*;
 import com.hotelbooking.springBoot.entity.User;
 import com.hotelbooking.springBoot.entity.UserImage;
 import com.hotelbooking.springBoot.exceptionHandling.ResourceNotFoundException;
 import com.hotelbooking.springBoot.repository.UserRepo;
-import jakarta.annotation.Resource;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.core.io.UrlResource;
@@ -21,7 +20,7 @@ import java.util.UUID;
 
 @Service
 @AllArgsConstructor
-public class UserServiceImp implements UserInterface{
+public class UserServiceImp implements UserInterface {
 
     private UserRepo userRepo;
     private ModelMapper modelMapper;

@@ -1,4 +1,4 @@
-package com.hotelbooking.springBoot.service;
+package com.hotelbooking.springBoot.service.booking;
 
 import com.hotelbooking.springBoot.dto.BookingDto;
 

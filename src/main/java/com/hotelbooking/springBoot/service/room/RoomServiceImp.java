@@ -1,7 +1,8 @@
-package com.hotelbooking.springBoot.service;
+package com.hotelbooking.springBoot.service.room;
 
 import com.hotelbooking.springBoot.dto.RoomDto;
 import com.hotelbooking.springBoot.entity.Room;
+import com.hotelbooking.springBoot.entity.RoomImage;
 import com.hotelbooking.springBoot.entity.RoomType;
 import com.hotelbooking.springBoot.exceptionHandling.ResourceNotFoundException;
 import com.hotelbooking.springBoot.repository.RoomRepo;
@@ -10,21 +11,34 @@ import lombok.Getter;
 import lombok.Setter;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 @Getter
 @Setter
 @AllArgsConstructor
-public class RoomServiceImp implements RoomInterface{
+public class RoomServiceImp implements RoomInterface {
 
     private ModelMapper modelMapper;
     private RoomRepo roomRepo;
+    private RoomImageInterface roomImageInterface;
 
     @Override
-    public RoomDto add(RoomDto roomDto){
+    public RoomDto add(List<MultipartFile> file,RoomDto roomDto) throws IOException {
+        roomDto.setId(UUID.randomUUID().toString());
         Room roomEntity = modelMapper.map(roomDto,Room.class);
+
+       List<RoomImage> roomImage = roomImageInterface.upload(file,roomDto.getId());
+
+        roomEntity.setRoomImage(roomImage);
+        for(RoomImage roomImage1: roomImage){
+            roomImage1.setRoom(roomEntity);
+        }
+
         Room savedRoomEntity  = roomRepo.save(roomEntity);
         return  modelMapper.map(savedRoomEntity,RoomDto.class);
 

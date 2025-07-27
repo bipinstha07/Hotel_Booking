@@ -1,4 +1,4 @@
-package com.hotelbooking.springBoot.service;
+package com.hotelbooking.springBoot.service.booking;
 
 import com.hotelbooking.springBoot.dto.BookingDto;
 import com.hotelbooking.springBoot.dto.RoomDto;
@@ -17,7 +17,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class BookingServiceImp implements BookingInterface{
+public class BookingServiceImp implements BookingInterface {
 
     private  ModelMapper modelMapper;
     private BookingRepo bookingRepo;

@@ -1,5 +1,6 @@
 package com.hotelbooking.springBoot.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.hotelbooking.springBoot.entity.Booking;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -14,6 +15,7 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RoomDto {
 
     private String id;
@@ -24,5 +26,6 @@ public class RoomDto {
     private String roomType;
     private Integer pricePerNight;
     private Integer capacity;
+
 //    private List<BookingDto> booking;
 }
