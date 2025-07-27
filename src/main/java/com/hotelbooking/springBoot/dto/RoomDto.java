@@ -26,6 +26,6 @@ public class RoomDto {
     private String roomType;
     private Integer pricePerNight;
     private Integer capacity;
-
+    private List<String> roomImageIds;
 //    private List<BookingDto> booking;
 }

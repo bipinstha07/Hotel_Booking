@@ -1,6 +1,7 @@
 package com.hotelbooking.springBoot.exceptionHandling;
 
 import com.hotelbooking.springBoot.dto.ErrorResponseDto;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
@@ -9,6 +10,7 @@ import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.multipart.support.MissingServletRequestPartException;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.HashMap;
@@ -62,6 +64,19 @@ public class GlobalExceptionHandler {
         ErrorResponseDto errorResponseDto = new ErrorResponseDto(exception.getMessage(),400,false);
         return new ResponseEntity<>(errorResponseDto,HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(MissingServletRequestPartException.class)
+    public ResponseEntity<ErrorResponseDto> handleMissingServletRequestPartException(MissingServletRequestPartException exception){
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto(exception.getMessage(),400,false);
+        return new ResponseEntity<>(errorResponseDto,HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ErrorResponseDto> handleConstraintViolationException(ConstraintViolationException exception){
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto(exception.getMessage(),400,false);
+        return new ResponseEntity<>(errorResponseDto,HttpStatus.BAD_REQUEST);
+    }
+
 
 
 }

@@ -1,6 +1,7 @@
 package com.hotelbooking.springBoot.service.room;
 
 import com.hotelbooking.springBoot.dto.RoomDto;
+import com.hotelbooking.springBoot.dto.RoomImageDto;
 import com.hotelbooking.springBoot.entity.Room;
 import com.hotelbooking.springBoot.entity.RoomImage;
 import com.hotelbooking.springBoot.entity.RoomType;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -38,9 +40,14 @@ public class RoomServiceImp implements RoomInterface {
         for(RoomImage roomImage1: roomImage){
             roomImage1.setRoom(roomEntity);
         }
-
         Room savedRoomEntity  = roomRepo.save(roomEntity);
-        return  modelMapper.map(savedRoomEntity,RoomDto.class);
+        RoomDto roomDto1 = modelMapper.map(savedRoomEntity,RoomDto.class);
+        List<String> ids = new ArrayList<>();
+       for (int i =0; i<roomImage.size();i++){
+           ids.add(roomImage.get(i).getId());
+       }
+        roomDto1.setRoomImageIds(ids);
+        return  roomDto1;
 
     }
 
