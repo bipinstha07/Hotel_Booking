@@ -1,17 +1,22 @@
 package com.hotelbooking.springBoot.service;
 
-import com.hotelbooking.springBoot.dto.RoleDto;
-import com.hotelbooking.springBoot.dto.UserDto;
+import com.hotelbooking.springBoot.dto.*;
 import com.hotelbooking.springBoot.entity.User;
 import com.hotelbooking.springBoot.entity.UserImage;
 import com.hotelbooking.springBoot.exceptionHandling.ResourceNotFoundException;
 import com.hotelbooking.springBoot.repository.UserRepo;
+import jakarta.annotation.Resource;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.UUID;
 
 @Service
@@ -45,5 +50,29 @@ public class UserServiceImp implements UserInterface{
         }
         return modelMapper.map(user, UserDto.class);
     }
+
+    @Override
+    public UserImageWithResource getUserWithImageById(String userId) throws MalformedURLException {
+            User user = userRepo.findUserById(userId);
+            UserImage userImage = user.getUserImage();
+
+            Path path = Paths.get(userImage.getFileName());
+
+
+            if(!Files.exists(path)){
+                throw new ResourceNotFoundException("No Path found for image");
+
+
+            }
+            UserDataWithImageDto userDataWithImageDto = new UserDataWithImageDto();
+            userDataWithImageDto.setUserDto(modelMapper.map(user,UserDto.class));
+            userDataWithImageDto.setUserImageDto(modelMapper.map(userImage, UserImageDto.class));
+
+            UrlResource urlResource =  new UrlResource(path.toUri());
+
+            return new UserImageWithResource(userDataWithImageDto, urlResource);
+
+        }
+
 
 }

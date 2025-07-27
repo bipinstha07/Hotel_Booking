@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class UserImageDto {
 
+
     private String id;
     private String fileName;
     private String fileType;

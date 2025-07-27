@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -43,6 +44,9 @@ public class UserController {
     public ResponseEntity<UserDto> getById(@PathVariable String getUserById) {
         return new ResponseEntity<>(userInterface.getUserById(getUserById), HttpStatus.OK);
     }
+
+
+
 
 
     @GetMapping("/rooms")
