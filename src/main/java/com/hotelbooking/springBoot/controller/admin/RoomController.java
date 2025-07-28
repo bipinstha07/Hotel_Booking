@@ -26,7 +26,7 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/admin/room")
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "*")
 @AllArgsConstructor
 public class RoomController {
 

@@ -22,6 +22,7 @@ public class RoomDto {
             message = "Invalid room type"
     )
     private String roomType;
+    private String roomNumber;
     private Integer pricePerNight;
     private Integer capacity;
     private String description;

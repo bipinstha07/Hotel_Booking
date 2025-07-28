@@ -1,5 +1,6 @@
 package com.hotelbooking.springBoot.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,8 +8,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
-
+@JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
 @Setter
 @AllArgsConstructor
@@ -36,6 +38,7 @@ public class UserDto {
     private String address;
     private LocalDate dateOfBirth;
     private RoleDto role;
+    private LocalDateTime accountCreation;
 
     private String userImage;
 }

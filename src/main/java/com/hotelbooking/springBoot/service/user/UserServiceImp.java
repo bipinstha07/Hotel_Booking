@@ -16,6 +16,7 @@ import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
@@ -30,14 +31,16 @@ public class UserServiceImp implements UserInterface {
     public UserDto create(UserDto userDto, MultipartFile image) throws IOException {
         userDto.setRole(RoleDto.CUSTOMER);
         userDto.setId(UUID.randomUUID().toString());
-
+        userDto.setAccountCreation(LocalDateTime.now());
         UserImage userImage= userImageInterface.upload(image,userDto.getId());
 
         User user = modelMapper.map(userDto,User.class);
         user.setUserImage(userImage);
         userImage.setUser(user);
+
         User savedUser = userRepo.save(user);
         UserDto savedUserDto = modelMapper.map(savedUser,UserDto.class);
+
         savedUserDto.setUserImage(userImage.getId());
         return savedUserDto;
     }

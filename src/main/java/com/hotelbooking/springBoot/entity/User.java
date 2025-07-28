@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.springframework.data.repository.cdi.Eager;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -27,6 +28,7 @@ public class User {
     private String number;
     private String address;
     private LocalDate dateOfBirth;
+    private LocalDateTime accountCreation;
 
     @Enumerated(EnumType.STRING)
     private Role role;

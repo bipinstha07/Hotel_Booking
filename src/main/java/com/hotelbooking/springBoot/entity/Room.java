@@ -19,7 +19,7 @@ public class Room {
 
 
     private RoomType roomType;
-
+    private String roomNumber;
     private Integer pricePerNight;
     private Integer capacity;
     private String description;
