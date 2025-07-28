@@ -22,7 +22,8 @@ public class Room {
 
     private Integer pricePerNight;
     private Integer capacity;
-
+    private String description;
+    private String amenities;
     @OneToMany(mappedBy = "room")
     private List<Booking> booking;
 

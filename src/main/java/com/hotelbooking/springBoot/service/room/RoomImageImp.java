@@ -3,14 +3,13 @@ package com.hotelbooking.springBoot.service.room;
 import com.hotelbooking.springBoot.dto.RoomImageDto;
 import com.hotelbooking.springBoot.dto.RoomImageWithResource;
 import com.hotelbooking.springBoot.entity.RoomImage;
-import com.hotelbooking.springBoot.entity.UserImage;
+import com.hotelbooking.springBoot.repository.RoomImageRepo;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -27,6 +26,8 @@ public class RoomImageImp implements RoomImageInterface{
 
     @Autowired
     private ModelMapper modelMapper;
+
+
 
     @Override
     public List<RoomImage> upload(List<MultipartFile> files, String roomId) throws IOException {
@@ -50,6 +51,7 @@ public class RoomImageImp implements RoomImageInterface{
 
         return allRoomImage;
     }
+
 
 
 

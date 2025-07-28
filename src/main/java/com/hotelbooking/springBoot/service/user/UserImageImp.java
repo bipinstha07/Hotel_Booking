@@ -1,7 +1,6 @@
 package com.hotelbooking.springBoot.service.user;
 
 import com.hotelbooking.springBoot.dto.UserImageDto;
-import com.hotelbooking.springBoot.dto.UserImageWithResource;
 import com.hotelbooking.springBoot.entity.UserImage;
 import com.hotelbooking.springBoot.repository.UserImageRepo;
 import org.modelmapper.ModelMapper;
@@ -68,8 +67,4 @@ public class UserImageImp implements UserImageInterface {
 
     }
 
-    @Override
-    public UserImageWithResource loadImage(Long userId) {
-        return null;
-    }
 }

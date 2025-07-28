@@ -25,6 +25,8 @@ public class Booking {
     private LocalDate checkOutDate;
     private LocalDateTime bookingCreated;
     private Integer totalPrice;
+    private String bookingStatus;
+    private String notes;
 
     @ManyToOne
     private Room room;

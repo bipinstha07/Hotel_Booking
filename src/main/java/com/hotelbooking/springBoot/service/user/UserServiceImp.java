@@ -76,7 +76,6 @@ public class UserServiceImp implements UserInterface {
         UrlResource urlResource =  new UrlResource(path.toUri());
         return new UserImageWithResource(modelMapper.map(userImage,UserImageDto.class), urlResource);
 
-
         }
 
 

@@ -21,6 +21,8 @@ public class BookingDto {
     private LocalDate checkOutDate;
     private LocalDateTime bookingCreated = LocalDateTime.now();
     private Integer totalPrice;
+    private String bookingStatus;
+    private String notes;
 
     private RoomDto room;
 

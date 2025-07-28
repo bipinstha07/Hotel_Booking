@@ -1,8 +1,6 @@
 package com.hotelbooking.springBoot.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.hotelbooking.springBoot.entity.Booking;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,6 +24,8 @@ public class RoomDto {
     private String roomType;
     private Integer pricePerNight;
     private Integer capacity;
+    private String description;
+    private String amenities;
     private List<String> roomImageIds;
 //    private List<BookingDto> booking;
 }
