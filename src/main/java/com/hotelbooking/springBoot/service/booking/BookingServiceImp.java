@@ -2,6 +2,7 @@ package com.hotelbooking.springBoot.service.booking;
 
 import com.hotelbooking.springBoot.dto.BookingDto;
 import com.hotelbooking.springBoot.dto.RoomDto;
+import com.hotelbooking.springBoot.dto.UpdateBookingDto;
 import com.hotelbooking.springBoot.entity.Booking;
 import com.hotelbooking.springBoot.entity.Room;
 import com.hotelbooking.springBoot.exceptionHandling.ResourceNotFoundException;
@@ -54,6 +55,21 @@ public BookingDto addBooking(BookingDto bookingDto){
       List<Booking> booking =  bookingRepo.findAll();
       List<BookingDto> bookingDtos = booking.stream().map((book)-> modelMapper.map(book,BookingDto.class)).toList();
       return bookingDtos;
+    }
+
+    @Override
+    public void updateBookingStatus(Long roomId, String bookingStatus) throws ResourceNotFoundException {
+       Booking booking = bookingRepo.findById(roomId).orElseThrow(()-> new ResourceNotFoundException("No Booking Found"));
+       try {
+           booking.setBookingStatus(bookingStatus);
+           bookingRepo.save(booking);
+       }
+       catch (Exception e){
+           throw new ResourceNotFoundException("Cannot Perform Action");
+       }
+
+
+
     }
 
 

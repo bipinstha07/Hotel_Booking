@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hotelbooking.springBoot.dto.BookingDto;
 import com.hotelbooking.springBoot.dto.RoomDto;
 import com.hotelbooking.springBoot.dto.RoomImageDto;
+import com.hotelbooking.springBoot.dto.UpdateBookingDto;
 import com.hotelbooking.springBoot.service.booking.BookingInterface;
 import com.hotelbooking.springBoot.service.room.RoomInterface;
 import jakarta.validation.ConstraintViolation;
@@ -37,6 +38,7 @@ public class RoomController {
     private Validator validator;
     private BookingInterface bookingInterface;
 
+//Room Create
     @PostMapping(value = "/create",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<RoomDto> createBooking(@RequestPart  String roomData,  @RequestPart(value = "image", required = false) List<MultipartFile> image) throws IOException {
         RoomDto roomDto = new ObjectMapper().readValue(roomData, RoomDto.class);
@@ -97,9 +99,17 @@ public class RoomController {
         return new ResponseEntity<>(roomInterface.updateById(roomId,roomDto),HttpStatus.CREATED);
     }
 
+//    Booking ----------------------------------------------------------------------------------------------------------
     @GetMapping("/booking/getAll")
     public ResponseEntity<List<BookingDto>> getAllBooking(){
         return new ResponseEntity<>(bookingInterface.getAll(),HttpStatus.OK);
+    }
+
+//
+    @PatchMapping("/booking/update/{roomId}")
+    public ResponseEntity<String> updateBookingStatus(@PathVariable Long roomId, String bookingStatus){
+        bookingInterface.updateBookingStatus(roomId,bookingStatus);
+        return new ResponseEntity<>("Success",HttpStatus.OK);
     }
 
 }
