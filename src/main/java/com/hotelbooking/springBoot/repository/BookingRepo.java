@@ -10,7 +10,7 @@ import java.util.List;
 
 public interface BookingRepo extends JpaRepository<Booking,Long> {
 
-    @Query("SELECT booking FROM Booking booking WHERE booking.room.id = :roomId AND (booking.checkInDate >= :checkIn OR booking.checkOutDate <= :checkOut)")
-    Booking findBookingOverlap(@Param("roomId") String roomId, @Param("checkIn") LocalDate checkIn, @Param("checkOut") LocalDate checkOut);
+    @Query("SELECT booking FROM Booking booking WHERE booking.room.id = :roomId AND (booking.checkInDate BETWEEN :checkIn AND :checkOut OR booking.checkOutDate BETWEEN :checkIn AND :checkOut)")
+    List<Booking> findBookingsBetweenDates(@Param("roomId") String roomId, @Param("checkIn") LocalDate checkIn, @Param("checkOut") LocalDate checkOut);
 
 }

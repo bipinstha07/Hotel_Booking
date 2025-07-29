@@ -26,7 +26,7 @@ public class BookingServiceImp implements BookingInterface {
 @Override
 public BookingDto addBooking(BookingDto bookingDto){
         Room room = roomRepo.findById(bookingDto.getRoomId()).orElseThrow(()-> new ResourceNotFoundException("No Room Found"));
-    LocalDate localDate = LocalDate.now();
+        LocalDate localDate = LocalDate.now();
     if(bookingDto.getCheckInDate().isBefore(localDate) ||
             bookingDto.getCheckOutDate().isBefore(bookingDto.getCheckInDate()) ||
             bookingDto.getCheckOutDate().isBefore(localDate) ){
@@ -34,13 +34,14 @@ public BookingDto addBooking(BookingDto bookingDto){
         throw new TimeConflictException("Time Conflict! Sorry Cannot proceed ");
     }
 
-     Booking bookingByCheckInDateBetween =  bookingRepo.findBookingOverlap(bookingDto.getRoomId(),bookingDto.getCheckInDate(),bookingDto.getCheckOutDate());
-    if(bookingByCheckInDateBetween != null){
+     List<Booking> bookingByCheckInDateBetween =  bookingRepo.findBookingsBetweenDates(bookingDto.getRoomId(),bookingDto.getCheckInDate(),bookingDto.getCheckOutDate());
+    if (!bookingByCheckInDateBetween.isEmpty()) {
         throw new TimeConflictException("Not available on this Date");
     }
 
 
-        bookingDto.setBookingStatus("Pending");
+
+    bookingDto.setBookingStatus("Pending");
         Booking booking = modelMapper.map(bookingDto,Booking.class);
         Booking savedBooking = bookingRepo.save(booking);
         BookingDto bookingDto1 = modelMapper.map(savedBooking,BookingDto.class);
