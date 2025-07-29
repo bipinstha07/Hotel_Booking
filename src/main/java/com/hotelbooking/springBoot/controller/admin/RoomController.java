@@ -1,8 +1,10 @@
 package com.hotelbooking.springBoot.controller.admin;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hotelbooking.springBoot.dto.BookingDto;
 import com.hotelbooking.springBoot.dto.RoomDto;
 import com.hotelbooking.springBoot.dto.RoomImageDto;
+import com.hotelbooking.springBoot.service.booking.BookingInterface;
 import com.hotelbooking.springBoot.service.room.RoomInterface;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -16,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.management.openmbean.CompositeData;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
@@ -32,6 +35,7 @@ public class RoomController {
 
     private RoomInterface roomInterface;
     private Validator validator;
+    private BookingInterface bookingInterface;
 
     @PostMapping(value = "/create",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<RoomDto> createBooking(@RequestPart  String roomData,  @RequestPart(value = "image", required = false) List<MultipartFile> image) throws IOException {
@@ -93,5 +97,9 @@ public class RoomController {
         return new ResponseEntity<>(roomInterface.updateById(roomId,roomDto),HttpStatus.CREATED);
     }
 
+    @GetMapping("/booking/getAll")
+    public ResponseEntity<List<BookingDto>> getAllBooking(){
+        return new ResponseEntity<>(bookingInterface.getAll(),HttpStatus.OK);
+    }
 
 }

@@ -23,11 +23,12 @@ public class Booking {
     private String customerEmail;
     private LocalDate checkInDate;
     private LocalDate checkOutDate;
+    private Long phoneNumber;
     private LocalDateTime bookingCreated;
     private Integer totalPrice;
     private String bookingStatus;
     private String notes;
-
+    private Integer numberOfGuest;
     @ManyToOne
     private Room room;
 

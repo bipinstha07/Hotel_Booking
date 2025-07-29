@@ -1,5 +1,8 @@
 package com.hotelbooking.springBoot.controller.customer;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.hotelbooking.springBoot.dto.BookingDto;
 import com.hotelbooking.springBoot.service.booking.BookingInterface;
 import lombok.AllArgsConstructor;
@@ -9,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/user/booking")
 @AllArgsConstructor
@@ -18,13 +21,16 @@ public class BookingController {
     private BookingInterface bookingInterface;
 
     @PostMapping("/create")
-    public ResponseEntity<BookingDto> createBooking(@RequestBody BookingDto bookingDto){
-       BookingDto savedBookingDto = bookingInterface.addBooking(bookingDto);
+    public ResponseEntity<BookingDto> createBooking(@RequestBody String bookingJson) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        BookingDto bookingDto = objectMapper.readValue(bookingJson, BookingDto.class);
+        BookingDto savedBookingDto = bookingInterface.addBooking(bookingDto);
         return  new ResponseEntity<>(savedBookingDto, HttpStatus.CREATED);
     }
 
 
-    @GetMapping()
+    @GetMapping("/getAll")
     public ResponseEntity<List<BookingDto>> getAll(){
         return new ResponseEntity<>(bookingInterface.getAll(),HttpStatus.OK);
     }

@@ -25,7 +25,7 @@ public class BookingServiceImp implements BookingInterface {
 
 @Override
 public BookingDto addBooking(BookingDto bookingDto){
-        Room room = roomRepo.findById(bookingDto.getRoom().getId()).orElseThrow(()-> new ResourceNotFoundException("No Room Found"));
+        Room room = roomRepo.findById(bookingDto.getRoomId()).orElseThrow(()-> new ResourceNotFoundException("No Room Found"));
     LocalDate localDate = LocalDate.now();
     if(bookingDto.getCheckInDate().isBefore(localDate) ||
             bookingDto.getCheckOutDate().isBefore(bookingDto.getCheckInDate()) ||
@@ -33,20 +33,25 @@ public BookingDto addBooking(BookingDto bookingDto){
 
         throw new TimeConflictException("Time Conflict! Sorry Cannot proceed ");
     }
+
+     Booking bookingByCheckInDateBetween =  bookingRepo.findBookingOverlap(bookingDto.getRoomId(),bookingDto.getCheckInDate(),bookingDto.getCheckOutDate());
+    if(bookingByCheckInDateBetween != null){
+        throw new TimeConflictException("Not available on this Date");
+    }
+
+
+        bookingDto.setBookingStatus("Pending");
         Booking booking = modelMapper.map(bookingDto,Booking.class);
         Booking savedBooking = bookingRepo.save(booking);
         BookingDto bookingDto1 = modelMapper.map(savedBooking,BookingDto.class);
-        bookingDto1.setRoom(modelMapper.map(room, RoomDto.class));
+        bookingDto1.setRoomEntity(modelMapper.map(room, RoomDto.class));
         return bookingDto1;
     }
 
     @Override
     public List<BookingDto> getAll() {
       List<Booking> booking =  bookingRepo.findAll();
-      List<BookingDto> bookingDtos = booking.stream().map((book)->{
-         return modelMapper.map(book,BookingDto.class);
-      }).toList();
-
+      List<BookingDto> bookingDtos = booking.stream().map((book)-> modelMapper.map(book,BookingDto.class)).toList();
       return bookingDtos;
     }
 
