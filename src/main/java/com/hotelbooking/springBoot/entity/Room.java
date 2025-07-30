@@ -17,7 +17,7 @@ public class Room {
     @Id
     private String id;
 
-
+    @Enumerated(EnumType.STRING)
     private RoomType roomType;
     private String roomNumber;
     private Integer pricePerNight;

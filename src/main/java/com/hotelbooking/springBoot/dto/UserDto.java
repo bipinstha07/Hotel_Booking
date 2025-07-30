@@ -9,6 +9,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Getter
@@ -39,6 +40,6 @@ public class UserDto {
     private LocalDate dateOfBirth;
     private RoleDto role;
     private LocalDateTime accountCreation;
-
+    private List<BookingDto> bookingDto;
     private String userImage;
 }

@@ -11,8 +11,9 @@ import java.util.List;
 
 public interface RoomInterface {
     RoomDto add(List<MultipartFile> file,RoomDto roomDto) throws IOException;
+
+    RoomDto updateById(String roomId, RoomDto roomDto, List<MultipartFile> file) throws IOException;
     List<RoomDto> getAll();
-    RoomDto updateById(String roomId, RoomDto roomDto);
     void deleteById(String roomId);
     RoomDto getById(String roomId);
     List<String> getImageUrlsByRoomId(String roomId);

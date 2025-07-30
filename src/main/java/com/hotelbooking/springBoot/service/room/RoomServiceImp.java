@@ -10,7 +10,11 @@ import com.hotelbooking.springBoot.repository.RoomRepo;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
+import lombok.experimental.FieldNameConstants;
 import org.modelmapper.ModelMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
@@ -35,6 +39,8 @@ public class RoomServiceImp implements RoomInterface {
     private RoomRepo roomRepo;
     private RoomImageInterface roomImageInterface;
     private RoomImageRepo imageRepo;
+    private transient final Logger logger = LoggerFactory.getLogger(RoomServiceImp.class);
+
 
     @Override
     public RoomDto add(List<MultipartFile> file,RoomDto roomDto) throws IOException {
@@ -48,6 +54,7 @@ public class RoomServiceImp implements RoomInterface {
             roomImage1.setRoom(roomEntity);
         }
         Room savedRoomEntity  = roomRepo.save(roomEntity);
+        logger.info("New Room Created with Id {} and Room Number {}",savedRoomEntity.getId(),roomEntity.getRoomNumber());
         RoomDto roomDto1 = modelMapper.map(savedRoomEntity,RoomDto.class);
         List<String> ids = new ArrayList<>();
        for (int i =0; i<roomImage.size();i++){
@@ -56,6 +63,47 @@ public class RoomServiceImp implements RoomInterface {
         roomDto1.setRoomImageIds(ids);
         return  roomDto1;
 
+    }
+
+    @Override
+    public RoomDto updateById(String roomId, RoomDto roomDto, List<MultipartFile> file) throws IOException {
+        Room room = roomRepo.findById(roomId).orElseThrow(()->new ResourceNotFoundException("No Room Found"));
+        room.setCapacity(roomDto.getCapacity());
+        room.setPricePerNight(roomDto.getPricePerNight());
+        room.setAmenities(roomDto.getAmenities());
+        room.setDescription(roomDto.getDescription());
+        room.setRoomNumber(roomDto.getRoomNumber());
+
+        List<String> ids = new ArrayList<>();
+        if(file != null){
+            List<RoomImage> roomImage = roomImageInterface.upload(file,roomDto.getId());
+            room.setRoomImage(roomImage);
+            for(RoomImage roomImage1: roomImage){
+                roomImage1.setRoom(room);
+            }
+
+            for (int i =0; i<roomImage.size();i++){
+                ids.add(roomImage.get(i).getId());
+            }
+        }
+
+        RoomType r = RoomType.valueOf(roomDto.getRoomType());
+        room.setRoomType(r);
+        RoomDto roomDto1 = modelMapper.map(roomRepo.save(room),RoomDto.class);
+        logger.info("Room Updated with Id {} and Room Number {}",roomDto1.getId(),roomDto1.getRoomNumber());
+
+        if(file != null){
+            roomDto1.setRoomImageIds(ids);
+        }
+
+        return  roomDto1;
+    }
+
+    @Override
+    public void deleteById(String roomId) {
+        Room room = roomRepo.findById(roomId).orElseThrow(()-> new ResourceNotFoundException("No Room Found"));
+        roomRepo.delete(room);
+        logger.info("Room Deleted with Id {} and Room Number {}",room.getId(),room.getRoomNumber());
     }
 
     @Override
@@ -83,22 +131,6 @@ public class RoomServiceImp implements RoomInterface {
        return  new UrlResource(path.toUri());
     }
 
-
-    @Override
-    public RoomDto updateById(String roomId,RoomDto roomDto) {
-        Room room = roomRepo.findById(roomId).orElseThrow(()->new ResourceNotFoundException("No Room Found"));
-       room.setCapacity(roomDto.getCapacity());
-       room.setPricePerNight(roomDto.getPricePerNight());
-       RoomType r = RoomType.valueOf(roomDto.getRoomType());
-       room.setRoomType(r);
-       return modelMapper.map(roomRepo.save(room),RoomDto.class);
-    }
-
-    @Override
-    public void deleteById(String roomId) {
-        Room room = roomRepo.findById(roomId).orElseThrow(()-> new ResourceNotFoundException("No Room Found"));
-        roomRepo.delete(room);
-    }
 
     @Override
     public RoomDto getById(String roomId) {

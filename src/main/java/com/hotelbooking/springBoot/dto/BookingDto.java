@@ -29,5 +29,8 @@ public class BookingDto {
     private Integer numberOfGuest;
     private String roomId;
     private RoomDto roomEntity;
+    private String userId;
+    private UserDto userDto;
+
 
 }

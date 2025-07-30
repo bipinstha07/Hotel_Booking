@@ -25,13 +25,14 @@ public class BookingController {
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         BookingDto bookingDto = objectMapper.readValue(bookingJson, BookingDto.class);
+        System.out.println(bookingDto.getRoomId());
         BookingDto savedBookingDto = bookingInterface.addBooking(bookingDto);
         return  new ResponseEntity<>(savedBookingDto, HttpStatus.CREATED);
     }
 
 
-    @GetMapping("/getAll")
-    public ResponseEntity<List<BookingDto>> getAll(){
-        return new ResponseEntity<>(bookingInterface.getAll(),HttpStatus.OK);
+    @GetMapping("/{userId}/getAll")
+    public ResponseEntity<List<BookingDto>> getAll(@PathVariable String userId){
+        return new ResponseEntity<>(bookingInterface.getAllByUser(userId),HttpStatus.OK);
     }
 }

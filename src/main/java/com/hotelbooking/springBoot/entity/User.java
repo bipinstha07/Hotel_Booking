@@ -9,6 +9,7 @@ import org.springframework.data.repository.cdi.Eager;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -32,6 +33,9 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private Role role;
+
+    @OneToMany(mappedBy = "user")
+    private List<Booking> booking;
 
     @OneToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private UserImage userImage;

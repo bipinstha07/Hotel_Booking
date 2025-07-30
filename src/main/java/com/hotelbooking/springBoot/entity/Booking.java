@@ -29,8 +29,11 @@ public class Booking {
     private String bookingStatus;
     private String notes;
     private Integer numberOfGuest;
+
     @ManyToOne
     private Room room;
 
+    @ManyToOne
+    private User user;
 
 }

@@ -8,5 +8,6 @@ import java.util.List;
 public interface BookingInterface {
     BookingDto addBooking(BookingDto bookingDto);
     List<BookingDto> getAll();
+    List<BookingDto> getAllByUser(String userId);
     void updateBookingStatus(Long bookingId,String bookingStatus);
 }
