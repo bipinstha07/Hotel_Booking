@@ -17,7 +17,7 @@ import java.util.Date;
 public class JwtHelper {
 
     public static final int validity = 60 *  60 * 1000; // 1 hr validate
-    private final String secret_key = "fdf";
+    private final String secret_key = "yourSuperSecretKeyForHS512AlgorithmWhichMustBeAtLeast64BytesLongAndSecure";
 
     private Key key;
 
