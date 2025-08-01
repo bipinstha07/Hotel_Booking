@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 
 @Service
@@ -47,31 +48,34 @@ public class BookingServiceImp implements BookingInterface {
             throw new TimeConflictException("Not available on this Date");
         }
 
-        bookingDto.setBookingStatus("Pending");
+        bookingDto.setBookingStatus("PENDING");
         logger.info(bookingDto.getRoomId());
         Booking booking = modelMapper.map(bookingDto,Booking.class);
+        booking.setRoom(room);
         Booking savedBooking = bookingRepo.save(booking);
 
-        String body = String.format(
-                "Dear %s,\n\n" +
-                        "Your request to book a %s room has been received.\n\n" +
-                        "Check-in Date: %s\n" +
-                        "Check-out Date: %s\n\n" +
-                        "Status: Pending\n\n" +
-                        "You will be notified within 24 hours regarding the approval.\n\n" +
-                        "Thank you for choosing us.\n\n" +
-                        "Best regards,\n" +
-                        "Hotel Booking Team",
-                savedBooking.getCustomerName(),  // Optional, if name is available
-                room.getRoomType(),
-                savedBooking.getCheckInDate(),
-                savedBooking.getCheckOutDate()
-        );
 
-        String subject = "Room Booking Request Received";
+            String body = String.format(
+                    "Dear %s,\n\n" +
+                            "Your request to book a %s room has been received.\n\n" +
+                            "Check-in Date: %s\n" +
+                            "Check-out Date: %s\n\n" +
+                            "Status: Pending\n\n" +
+                            "You will be notified within 24 hours regarding the approval.\n\n" +
+                            "Thank you for choosing us.\n\n" +
+                            "Best regards,\n" +
+                            "Hotel Booking Team",
+                    savedBooking.getCustomerName(),  // Optional, if name is available
+                    room.getRoomType(),
+                    savedBooking.getCheckInDate(),
+                    savedBooking.getCheckOutDate()
+            );
+
+            String subject = "Room Booking Request Received: BookingId: "+ savedBooking.getId();
 
 
-//        sendEmailService.sendEmail(savedBooking.getCustomerEmail(),body,subject);
+//            sendEmailService.sendEmail(savedBooking.getCustomerEmail(), body, subject);
+
         logger.info("Booking Proceed for Id: {} with Name {} and email {} ",savedBooking.getId(),savedBooking.getCustomerName(),savedBooking.getCustomerEmail());
 
         BookingDto bookingDto1 = modelMapper.map(savedBooking,BookingDto.class);
@@ -82,7 +86,9 @@ public class BookingServiceImp implements BookingInterface {
     @Override
     public List<BookingDto> getAll() {
       List<Booking> booking =  bookingRepo.findAll();
+
       List<BookingDto> bookingDtos = booking.stream().map((book)-> modelMapper.map(book,BookingDto.class)).toList();
+        System.out.println(bookingDtos.get(1).getRoomNumber()+"Room Number Testing");
       logger.info("All Booking Requested");
       return bookingDtos;
     }
@@ -95,9 +101,31 @@ public class BookingServiceImp implements BookingInterface {
     @Override
     public void updateBookingStatus(Long roomId, String bookingStatus) throws ResourceNotFoundException {
        Booking booking = bookingRepo.findById(roomId).orElseThrow(()-> new ResourceNotFoundException("No Booking Found"));
+       Room room = roomRepo.findById(booking.getRoom().getId()).orElseThrow(()-> new ResourceNotFoundException("No Room Found"));
        try {
            booking.setBookingStatus(bookingStatus);
            bookingRepo.save(booking);
+           if(!Objects.equals(bookingStatus.toUpperCase(), "DELETED")) {
+               String body = String.format(
+                       "Dear %s,\n\n" +
+                               "Your booking for a %s room has been updated.\n\n" +
+                               "Check-in Date: %s\n" +
+                               "Check-out Date: %s\n\n" +
+                               "Updated Status: %s\n\n" +
+                               "Thank you for booking with us.\n\n" +
+                               "Best regards,\n" +
+                               "Hotel Booking Team",
+                       booking.getCustomerName(),
+                       room.getRoomType(),
+                       booking.getCheckInDate(),
+                       booking.getCheckOutDate(),
+                       booking.getBookingStatus()
+               );
+
+               String subject = "Room Booking Update for BookingId: " + booking.getId();
+
+//               sendEmailService.sendEmail(booking.getCustomerEmail(), body, subject);
+           }
            logger.info("Booking Status Changed for ID: {} to {}",booking.getId(),booking.getBookingStatus());
        }
        catch (Exception e){
