@@ -3,8 +3,10 @@ package com.hotelbooking.springBoot.controller.user;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.hotelbooking.springBoot.dto.BookingDto;
 import com.hotelbooking.springBoot.dto.RoomDto;
 import com.hotelbooking.springBoot.dto.UserDto;
+import com.hotelbooking.springBoot.service.booking.BookingInterface;
 import com.hotelbooking.springBoot.service.room.RoomInterface;
 import com.hotelbooking.springBoot.service.user.UserInterface;
 import lombok.AllArgsConstructor;
@@ -27,6 +29,7 @@ import java.util.List;
 public class UserController {
     private UserInterface userInterface;
     private RoomInterface roomInterface;
+    private BookingInterface bookingInterface;
 
 
     @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -42,9 +45,9 @@ public class UserController {
         return new ResponseEntity<>(userInterface.create(userDto1,image), HttpStatus.CREATED);
     }
 
-    @GetMapping("/{getUserById}")
-    public ResponseEntity<UserDto> getById(@PathVariable String getUserById) {
-        return new ResponseEntity<>(userInterface.getUserById(getUserById), HttpStatus.OK);
+    @GetMapping("/{getUserByUserName}")
+    public ResponseEntity<UserDto> getById(@PathVariable String getUserByUserName) {
+        return new ResponseEntity<>(userInterface.getUserByUserName(getUserByUserName), HttpStatus.OK);
     }
 
 
@@ -61,6 +64,11 @@ public class UserController {
     @GetMapping("/rooms")
     public ResponseEntity<List<RoomDto>> getAllRoom(){
         return new ResponseEntity<>(roomInterface.getAll(),HttpStatus.OK);
+    }
+
+    @GetMapping("/{username}/booking")
+    public ResponseEntity<List<BookingDto>> getBookingsByUser(@PathVariable String username){
+        return new ResponseEntity<>(bookingInterface.getBookingByUser(username),HttpStatus.OK);
     }
 
 }

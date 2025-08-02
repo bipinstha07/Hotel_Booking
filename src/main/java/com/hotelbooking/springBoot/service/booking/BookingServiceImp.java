@@ -4,10 +4,12 @@ import com.hotelbooking.springBoot.dto.BookingDto;
 import com.hotelbooking.springBoot.dto.RoomDto;
 import com.hotelbooking.springBoot.entity.Booking;
 import com.hotelbooking.springBoot.entity.Room;
+import com.hotelbooking.springBoot.entity.User;
 import com.hotelbooking.springBoot.exceptionHandling.ResourceNotFoundException;
 import com.hotelbooking.springBoot.exceptionHandling.TimeConflictException;
 import com.hotelbooking.springBoot.repository.BookingRepo;
 import com.hotelbooking.springBoot.repository.RoomRepo;
+import com.hotelbooking.springBoot.repository.UserRepo;
 import com.hotelbooking.springBoot.service.Mailing.SendEmailService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -27,6 +29,7 @@ public class BookingServiceImp implements BookingInterface {
     private  ModelMapper modelMapper;
     private BookingRepo bookingRepo;
     private RoomRepo roomRepo;
+    private UserRepo userRepo;
     private SendEmailService sendEmailService;
 
     private transient final Logger logger = LoggerFactory.getLogger(BookingServiceImp.class);
@@ -52,6 +55,8 @@ public class BookingServiceImp implements BookingInterface {
         logger.info(bookingDto.getRoomId());
         Booking booking = modelMapper.map(bookingDto,Booking.class);
         booking.setRoom(room);
+        User user = userRepo.findByEmail(bookingDto.getCustomerEmail()).orElse(null);
+        booking.setUser(user);
         Booking savedBooking = bookingRepo.save(booking);
 
 
@@ -134,6 +139,12 @@ public class BookingServiceImp implements BookingInterface {
        }
 
 
+    }
+
+    @Override
+    public List<BookingDto> getBookingByUser(String username) {
+        List<Booking> bookings = bookingRepo.findBookingsByUserEmail(username);
+        return bookings.stream().map(book->modelMapper.map(book,BookingDto.class)).toList();
     }
 
 

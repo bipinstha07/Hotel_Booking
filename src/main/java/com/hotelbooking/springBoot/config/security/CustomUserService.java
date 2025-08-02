@@ -3,12 +3,15 @@ package com.hotelbooking.springBoot.config.security;
 import com.hotelbooking.springBoot.entity.User;
 import com.hotelbooking.springBoot.exceptionHandling.ResourceNotFoundException;
 import com.hotelbooking.springBoot.repository.UserRepo;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
-@RequiredArgsConstructor
+@Service
+@AllArgsConstructor
 public class CustomUserService implements UserDetailsService {
 
     private UserRepo userRepo;

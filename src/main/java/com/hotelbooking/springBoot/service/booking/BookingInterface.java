@@ -10,4 +10,5 @@ public interface BookingInterface {
     List<BookingDto> getAll();
     List<BookingDto> getAllByUser(String userId);
     void updateBookingStatus(Long bookingId,String bookingStatus);
+    List<BookingDto> getBookingByUser(String username);
 }

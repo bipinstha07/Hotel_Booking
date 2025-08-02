@@ -9,6 +9,8 @@ import java.net.MalformedURLException;
 
 public interface UserInterface {
     UserDto create(UserDto userDto, MultipartFile file) throws IOException;
-    UserDto getUserById(String userId);
+
+    UserDto getUserByUserName(String userName);
+
     UserImageWithResource getUserWithImageById(String userId) throws MalformedURLException;
 }

@@ -8,6 +8,7 @@ import com.hotelbooking.springBoot.repository.UserRepo;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.core.io.UrlResource;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -23,6 +24,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class UserServiceImp implements UserInterface {
 
+    private final PasswordEncoder passwordEncoder;
     private UserRepo userRepo;
     private ModelMapper modelMapper;
     private UserImageInterface userImageInterface;
@@ -36,6 +38,7 @@ public class UserServiceImp implements UserInterface {
 
         User user = modelMapper.map(userDto,User.class);
         user.setUserImage(userImage);
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         userImage.setUser(user);
 
         User savedUser = userRepo.save(user);
@@ -45,9 +48,10 @@ public class UserServiceImp implements UserInterface {
         return savedUserDto;
     }
 
+
     @Override
-    public UserDto getUserById(String userId) {
-        User user = userRepo.findUserById(userId);
+    public UserDto getUserByUserName(String userName) {
+        User user = userRepo.findByEmail(userName).orElseThrow(()->new ResourceNotFoundException("No user Found"));
         if (user == null) {
             throw new ResourceNotFoundException("No User Found");
         }
