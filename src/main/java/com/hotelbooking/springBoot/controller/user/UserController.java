@@ -20,6 +20,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @CrossOrigin(origins = "*")
@@ -52,11 +55,11 @@ public class UserController {
 
 
 
-    @GetMapping("/image/{getUserById}")
-    public ResponseEntity<Resource> getUserWithImageById(@PathVariable String getUserById) throws MalformedURLException {
+    @GetMapping("/image/{getUserByEmail}")
+    public ResponseEntity<Resource> getUserWithImageById(@PathVariable String getUserByEmail) throws MalformedURLException {
         return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(userInterface.getUserWithImageById(getUserById).userImageDto().getFileType()))
-                .body(userInterface.getUserWithImageById(getUserById).resource());
+                .contentType(MediaType.parseMediaType(userInterface.getUserWithImageById(getUserByEmail).userImageDto().getFileType()))
+                .body(userInterface.getUserWithImageById(getUserByEmail).resource());
 
     }
 
@@ -70,6 +73,8 @@ public class UserController {
     public ResponseEntity<List<BookingDto>> getBookingsByUser(@PathVariable String username){
         return new ResponseEntity<>(bookingInterface.getBookingByUser(username),HttpStatus.OK);
     }
+
+
 
 }
 

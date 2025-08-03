@@ -59,9 +59,9 @@ public class UserServiceImp implements UserInterface {
     }
 
     @Override
-    public UserImageWithResource getUserWithImageById(String userId) throws MalformedURLException {
+    public UserImageWithResource getUserWithImageById(String userEmail) throws MalformedURLException {
 
-        User user = userRepo.findUserById(userId);
+        User user = userRepo.findByEmail(userEmail).orElse(null);
         if (user == null) throw new ResourceNotFoundException("User not found");
         UserImage userImage = user.getUserImage();
 
