@@ -11,19 +11,26 @@ import com.hotelbooking.springBoot.repository.BookingRepo;
 import com.hotelbooking.springBoot.repository.RoomRepo;
 import com.hotelbooking.springBoot.repository.UserRepo;
 import com.hotelbooking.springBoot.service.Mailing.SendEmailService;
+import com.hotelbooking.springBoot.service.payment.PaymentInterface;
+import com.stripe.Stripe;
+import com.stripe.exception.StripeException;
+import com.stripe.model.PaymentIntent;
+import com.stripe.param.PaymentIntentCreateParams;
+import jakarta.annotation.PostConstruct;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 
 @Service
-@AllArgsConstructor
 public class BookingServiceImp implements BookingInterface {
 
     private  ModelMapper modelMapper;
@@ -32,10 +39,28 @@ public class BookingServiceImp implements BookingInterface {
     private UserRepo userRepo;
     private SendEmailService sendEmailService;
 
+    public BookingServiceImp(UserRepo userRepo, SendEmailService sendEmailService, RoomRepo roomRepo, ModelMapper modelMapper, BookingRepo bookingRepo) {
+        this.userRepo = userRepo;
+        this.sendEmailService = sendEmailService;
+        this.roomRepo = roomRepo;
+        this.modelMapper = modelMapper;
+        this.bookingRepo = bookingRepo;
+    }
+
+    @Value("${stripe.secretKey}")
+    private String apiKey;
+
+
+    @PostConstruct
+    public void init() {
+        Stripe.apiKey = apiKey;
+    }
+
     private transient final Logger logger = LoggerFactory.getLogger(BookingServiceImp.class);
 
+    @Transactional
     @Override
-    public BookingDto addBooking(BookingDto bookingDto){
+    public Map<String,String> addBooking(BookingDto bookingDto) throws StripeException {
         Room room = roomRepo.findById(bookingDto.getRoomId()).orElseThrow(()-> new ResourceNotFoundException("No Room Found"));
         LocalDate localDate = LocalDate.now();
     if(bookingDto.getCheckInDate().isBefore(localDate) ||
@@ -52,11 +77,31 @@ public class BookingServiceImp implements BookingInterface {
         }
 
         bookingDto.setBookingStatus("PENDING");
+        bookingDto.setId(UUID.randomUUID().toString());
         logger.info(bookingDto.getRoomId());
         Booking booking = modelMapper.map(bookingDto,Booking.class);
         booking.setRoom(room);
         User user = userRepo.findByEmail(bookingDto.getCustomerEmail()).orElse(null);
         booking.setUser(user);
+        logger.info("I am here check out");
+
+//        Payment
+        PaymentIntent intent = PaymentIntent.create(
+                PaymentIntentCreateParams.builder()
+                        .setAmount((long) bookingDto.getTotalPrice()/100)
+                        .setCurrency("usd")
+                        .build()
+        );
+        booking.setTotalPrice(booking.getTotalPrice()/100);
+        booking.setPaymentIntentId(intent.getId());
+       booking.setPaymentStatus("PENDING");
+
+        Map<String, String> res = new HashMap<>();
+        res.put("clientSecret", intent.getClientSecret());
+        res.put("bookingId", bookingDto.getId());
+
+        logger.info(res.toString());
+//        Payment Closed
         Booking savedBooking = bookingRepo.save(booking);
 
 
@@ -85,15 +130,28 @@ public class BookingServiceImp implements BookingInterface {
 
         BookingDto bookingDto1 = modelMapper.map(savedBooking,BookingDto.class);
         bookingDto1.setRoomEntity(modelMapper.map(room, RoomDto.class));
-        return bookingDto1;
+        return res;
     }
+
+
+public String getPaymentBooking( Map<String, String> data){
+    Booking booking = bookingRepo.findByPaymentIntentId(data.get("paymentIntentId"));
+    if (booking != null) {
+        booking.setPaymentStatus("CONFIRMED");
+        bookingRepo.save(booking);
+        return "Booking Confirmed";
+    }
+    else{
+        return "Invalid Payment";
+    }
+}
+
 
     @Override
     public List<BookingDto> getAll() {
       List<Booking> booking =  bookingRepo.findAll();
 
       List<BookingDto> bookingDtos = booking.stream().map((book)-> modelMapper.map(book,BookingDto.class)).toList();
-        System.out.println(bookingDtos.get(1).getRoomNumber()+"Room Number Testing");
       logger.info("All Booking Requested");
       return bookingDtos;
     }
@@ -104,8 +162,8 @@ public class BookingServiceImp implements BookingInterface {
     }
 
     @Override
-    public void updateBookingStatus(Long roomId, String bookingStatus) throws ResourceNotFoundException {
-       Booking booking = bookingRepo.findById(roomId).orElseThrow(()-> new ResourceNotFoundException("No Booking Found"));
+    public void updateBookingStatus(String roomId, String bookingStatus) throws ResourceNotFoundException {
+       Booking booking = bookingRepo.findBookingsById(roomId);
        Room room = roomRepo.findById(booking.getRoom().getId()).orElseThrow(()-> new ResourceNotFoundException("No Room Found"));
        try {
            booking.setBookingStatus(bookingStatus);

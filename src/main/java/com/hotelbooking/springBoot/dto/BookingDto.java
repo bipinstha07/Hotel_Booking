@@ -1,6 +1,7 @@
 package com.hotelbooking.springBoot.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.hotelbooking.springBoot.entity.RoomType;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class BookingDto {
 
-    private Long id;
+    private String id;
     private String customerName;
     private String customerEmail;
     private LocalDate checkInDate;
@@ -29,9 +30,12 @@ public class BookingDto {
     private Integer numberOfGuest;
     private String roomId;
     private RoomDto roomEntity;
+    private RoomType roomType;
     private String roomNumber;
     private String userId;
     private UserDto userDto;
+    private String paymentStatus;
+    private String paymentIntentId;
 
 
 }

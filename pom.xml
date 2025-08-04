@@ -60,6 +60,13 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/com.stripe/stripe-java -->
+		<dependency>
+			<groupId>com.stripe</groupId>
+			<artifactId>stripe-java</artifactId>
+			<version>29.4.0</version>
+		</dependency>
+
 		<!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
 		<dependency>
 			<groupId>com.fasterxml.jackson.core</groupId>

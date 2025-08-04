@@ -18,4 +18,8 @@ public interface BookingRepo extends JpaRepository<Booking,Long> {
     List<Booking> findBookingsByUserEmail(@Param("email") String email);
 
     String user(User user);
+    Booking findByPaymentIntentId(String paymentIntentId);
+
+    Booking findBookingsById(String id);
+
 }
