@@ -15,6 +15,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -124,6 +126,9 @@ public class RoomController {
 //    Booking --------------------->In use-------------------------------------------------------------------------------------
     @GetMapping("/booking/getAll")
     public ResponseEntity<List<BookingDto>> getAllBooking(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        auth.getAuthorities().forEach(a -> System.out.println("ROLE: " + a.getAuthority()));
+        System.out.println("I am getting all");
         return new ResponseEntity<>(bookingInterface.getAll(),HttpStatus.OK);
     }
 
