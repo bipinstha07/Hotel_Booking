@@ -74,9 +74,9 @@ public class SecurityConfig {
                                         "/user/booking/confirm",
                                         "/user/booking/get-all",
                                         "/user/booking/*"
-                                ).hasAnyAuthority("CUSTOMER")
+                                ).hasAnyAuthority("ROLE_CUSTOMER")
 
-                                .requestMatchers("/admin/room/booking/update/*").hasAuthority("CUSTOMER")
+                                .requestMatchers("/admin/room/booking/update/*").hasAuthority("ROLE_CUSTOMER")
 
                                 .anyRequest().authenticated()
 
