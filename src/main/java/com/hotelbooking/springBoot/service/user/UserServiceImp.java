@@ -86,4 +86,21 @@ public class UserServiceImp implements UserInterface {
         }
 
 
+        @Override
+        public UserDto updateUserById(String userName, UserDto userDto, MultipartFile file) throws IOException {
+       User user = userRepo.findByEmail(userName).orElseThrow(()->new ResourceNotFoundException("No User Found"));
+        user.setName(userDto.getName());// hash if needed
+        user.setNumber(userDto.getNumber());
+        user.setAddress(userDto.getAddress());
+        user.setDateOfBirth(userDto.getDateOfBirth());
+        if (file != null && !file.isEmpty()) {
+            UserImage userImage  = userImageInterface.upload(file,user.getId()); // implement this
+            user.setUserImage(userImage);// if you have such field
+            userImage.setUser(user);
+        }
+
+        userRepo.save(user);
+        return modelMapper.map(user,UserDto.class);
+    }
+
 }

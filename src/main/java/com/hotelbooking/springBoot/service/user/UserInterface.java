@@ -13,4 +13,6 @@ public interface UserInterface {
     UserDto getUserByUserName(String userName);
 
     UserImageWithResource getUserWithImageById(String userId) throws MalformedURLException;
+
+    UserDto updateUserById(String userName, UserDto userDto, MultipartFile file) throws IOException;
 }

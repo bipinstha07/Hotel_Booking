@@ -59,6 +59,15 @@ public class UserController {
 
     }
 
+    @PatchMapping(value="/update/{username}",consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public  ResponseEntity<UserDto> updateUser(@PathVariable String username, @RequestPart String userDto,   @RequestPart(value = "image", required = false) MultipartFile image ) throws IOException {
+
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.registerModule(new JavaTimeModule());
+        UserDto userDto1 = mapper.readValue(userDto,UserDto.class);
+        return ResponseEntity.ok(userInterface.updateUserById(username,userDto1,image));
+    }
+
 //used
     @GetMapping("/rooms")
     public ResponseEntity<List<RoomDto>> getAllRoom(){

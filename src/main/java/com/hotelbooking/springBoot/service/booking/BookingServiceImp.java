@@ -11,19 +11,16 @@ import com.hotelbooking.springBoot.repository.BookingRepo;
 import com.hotelbooking.springBoot.repository.RoomRepo;
 import com.hotelbooking.springBoot.repository.UserRepo;
 import com.hotelbooking.springBoot.service.Mailing.SendEmailService;
-import com.hotelbooking.springBoot.service.payment.PaymentInterface;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.PaymentIntent;
 import com.stripe.param.PaymentIntentCreateParams;
 import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -84,15 +81,17 @@ public class BookingServiceImp implements BookingInterface {
         User user = userRepo.findByEmail(bookingDto.getCustomerEmail()).orElse(null);
         booking.setUser(user);
         logger.info("I am here check out");
+        logger.info(bookingDto.getTotalPrice()+"Total PRICE");
 
 //        Payment
         PaymentIntent intent = PaymentIntent.create(
                 PaymentIntentCreateParams.builder()
-                        .setAmount((long) bookingDto.getTotalPrice()/100)
+                        .setAmount((long) bookingDto.getTotalPrice())
                         .setCurrency("usd")
                         .build()
         );
         booking.setTotalPrice(booking.getTotalPrice()/100);
+        logger.info(booking.getTotalPrice()+"After payment");
         booking.setPaymentIntentId(intent.getId());
        booking.setPaymentStatus("PENDING");
 
@@ -205,5 +204,11 @@ public String getPaymentBooking( Map<String, String> data){
         return bookings.stream().map(book->modelMapper.map(book,BookingDto.class)).toList();
     }
 
+    @Override
+    public Integer getTotalRevenue(){
+
+        Integer totalRevenue = bookingRepo.totalRevenue().orElse(0);
+        return totalRevenue;
+    }
 
 }

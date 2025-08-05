@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface BookingRepo extends JpaRepository<Booking,Long> {
 
@@ -21,5 +22,8 @@ public interface BookingRepo extends JpaRepository<Booking,Long> {
     Booking findByPaymentIntentId(String paymentIntentId);
 
     Booking findBookingsById(String id);
+
+    @Query("SELECT SUM(booking.totalPrice) FROM Booking booking WHERE booking.paymentStatus = 'CONFIRMED'")
+    Optional<Integer> totalRevenue();
 
 }

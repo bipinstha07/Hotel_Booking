@@ -13,4 +13,6 @@ public interface BookingInterface {
     void updateBookingStatus(String bookingId,String bookingStatus);
     List<BookingDto> getBookingByUser(String username);
     String getPaymentBooking( Map<String, String> data);
+
+    Integer getTotalRevenue();
 }

@@ -141,4 +141,9 @@ public class RoomController {
         return new ResponseEntity<>("Success",HttpStatus.OK);
     }
 
+    @GetMapping("/booking/totalRevenue")
+    public ResponseEntity<Integer> totalRevenue(){
+        return new ResponseEntity<>(bookingInterface.getTotalRevenue(),HttpStatus.OK);
+    }
+
 }
