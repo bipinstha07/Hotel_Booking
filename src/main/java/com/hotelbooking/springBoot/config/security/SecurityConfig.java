@@ -65,27 +65,21 @@ public class SecurityConfig {
                                         "/user/rooms",
                                         "/user/booking/create",
                                         "/user/booking/confirm",
-                                        "/api/v1",
-                                        "/user/{username}",
-
-
-                                        "/user/image/*",
-                                        "/admin/room/create",
+                                        "/user/{username}"
+                                ).permitAll()
+                                .requestMatchers("/user/*/booking","/user/image/*").hasAuthority("CUSTOMER")
+                                .requestMatchers("/admin/room/create",
                                         "/admin/room/update/*",
                                         "/admin/room/getById/*",
                                         "/admin/room/delete/*",
                                         "/admin/room/deleteById/*",
                                         "/admin/room/booking/getAll",
-                                        "/admin/room/booking/update/*"
-
-                                ).permitAll()
-                                .requestMatchers("/user/*/booking").hasAuthority("CUSTOMER")
+                                        "/admin/room/booking/update/*")
+                                .hasAuthority("ADMIN")
                                 .anyRequest().authenticated()
-
 
                 );
 
-        System.out.println("HI I AM HERE");
         httpSecurity.sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         httpSecurity.exceptionHandling(e->e.authenticationEntryPoint(jwtAuthenticationEntryPoint));
         httpSecurity.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
