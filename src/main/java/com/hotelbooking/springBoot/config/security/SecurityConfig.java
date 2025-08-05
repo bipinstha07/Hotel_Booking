@@ -65,18 +65,18 @@ public class SecurityConfig {
                                         "/user/rooms",
                                         "/user/booking/create",
                                         "/user/booking/confirm",
-                                        "/user/{username}"
+                                        "/user/*"
                                 ).permitAll()
-                                .requestMatchers("/user/*/booking","/user/image/*").hasAuthority("CUSTOMER")
+                                .requestMatchers("/user/*/booking","/user/image/*").hasAnyAuthority("CUSTOMER","ADMIN")
                                 .requestMatchers("/admin/room/create",
                                         "/admin/room/update/*",
                                         "/admin/room/getById/*",
                                         "/admin/room/delete/*",
                                         "/admin/room/deleteById/*",
                                         "/admin/room/booking/getAll",
-                                        "/admin/room/booking/update/*")
+                                        "/admin/room/booking/update/**")
                                 .hasAuthority("ADMIN")
-                                .anyRequest().authenticated()
+                                .anyRequest().permitAll()
 
                 );
 

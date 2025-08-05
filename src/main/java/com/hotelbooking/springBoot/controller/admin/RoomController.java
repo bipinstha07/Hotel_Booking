@@ -136,6 +136,7 @@ public class RoomController {
 //    Patch Mapping  --------------------------------------->In Use-----------------------------------------------------------------------------------------------
     @PatchMapping("/booking/update/{roomId}")
     public ResponseEntity<String> updateBookingStatus(@PathVariable String roomId, String bookingStatus){
+        logger.info("Update Booking",roomId,bookingStatus);
         bookingInterface.updateBookingStatus(roomId,bookingStatus);
         return new ResponseEntity<>("Success",HttpStatus.OK);
     }
