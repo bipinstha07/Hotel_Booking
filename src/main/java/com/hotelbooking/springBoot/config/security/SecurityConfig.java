@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -47,37 +48,38 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception{
+        System.out.println("Http security");
+
+
         httpSecurity.csrf(AbstractHttpConfigurer::disable)
+                .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(request->
                         request
                                 .requestMatchers(
-                                        "/auth/**",
+                                        "/auth/login",
+                                        "/auth/register",
                                         "/admin/room/getAll",
                                         "/admin/room/*/images",
                                         "/admin/room/*/images/*",
-                                        "/admin/room/create",
-
                                         "/user/create",
                                         "/user/rooms",
                                         "/user/booking/create",
                                         "/user/booking/confirm",
-                                        "/user/image/**",
                                         "/api/v1",
                                         "/user/{username}",
-                                        "/admin/room/booking/getAll"
+
+
+                                        "/user/image/*",
+                                        "/admin/room/create",
+                                        "/admin/room/update/*",
+                                        "/admin/room/getById/*",
+                                        "/admin/room/delete/*",
+                                        "/admin/room/deleteById/*",
+                                        "/admin/room/booking/getAll",
+                                        "/admin/room/booking/update/*"
+
                                 ).permitAll()
-
-                                .requestMatchers(
-                                        "/user/booking/*/getAll",
-                                        "/user/*/booking",
-                                        "/user/{email}/booking",
-                                        "/user/booking/confirm",
-                                        "/user/booking/get-all",
-                                        "/user/booking/*"
-                                ).hasAnyAuthority("ROLE_CUSTOMER")
-
-                                .requestMatchers("/admin/room/booking/update/*").hasAuthority("ROLE_CUSTOMER")
-
+                                .requestMatchers("/user/*/booking").hasAuthority("CUSTOMER")
                                 .anyRequest().authenticated()
 
 

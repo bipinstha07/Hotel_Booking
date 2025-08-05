@@ -29,7 +29,6 @@ import java.util.Set;
 
 @RestController
 @RequestMapping("/admin/room")
-@CrossOrigin(origins = "*")
 @AllArgsConstructor
 public class RoomController {
 
@@ -110,6 +109,8 @@ public class RoomController {
     //    Get Mapping  --------------------------------------->In Use-----------------------------------------------------------------------------------------------
     @GetMapping("/getAll")
     public ResponseEntity<List<RoomDto>> getAll(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        auth.getAuthorities().forEach(a -> System.out.println("ROLE: " + a.getAuthority()));
         return new ResponseEntity<>(roomInterface.getAll(),HttpStatus.OK);
     }
 

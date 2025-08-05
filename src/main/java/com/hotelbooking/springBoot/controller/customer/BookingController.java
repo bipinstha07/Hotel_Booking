@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-@CrossOrigin(origins = "*")
+
 @RestController
 @RequestMapping("/user/booking")
 @AllArgsConstructor
@@ -43,8 +43,8 @@ public class BookingController {
 
 
 
-    @GetMapping("/{userId}/getAll")
-    public ResponseEntity<List<BookingDto>> getAll(@PathVariable String userId){
-        return new ResponseEntity<>(bookingInterface.getAllByUser(userId),HttpStatus.OK);
-    }
+//    @GetMapping("/{userId}/getAll")
+//    public ResponseEntity<List<BookingDto>> getAll(@PathVariable String userId){
+//        return new ResponseEntity<>(bookingInterface.getAllByUser(userId),HttpStatus.OK);
+//    }
 }

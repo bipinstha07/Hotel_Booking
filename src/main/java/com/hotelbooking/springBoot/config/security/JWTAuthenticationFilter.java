@@ -36,7 +36,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
 //        client sends request with header authorization it contains all the header details
         String authorizationHeader = request.getHeader("Authorization");
-        logger.trace("Authorization Request");
+        logger.info("Authorization Request");
 
         String username = null;
         String token = null;

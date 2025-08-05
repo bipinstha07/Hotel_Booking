@@ -1,5 +1,12 @@
 package com.hotelbooking.springBoot.entity;
 
-public enum Role {
-    CUSTOMER,ADMIN
+import org.springframework.security.core.GrantedAuthority;
+
+public enum Role implements GrantedAuthority {
+    CUSTOMER,ADMIN;
+
+    @Override
+    public String getAuthority() {
+        return this.name();
+    }
 }

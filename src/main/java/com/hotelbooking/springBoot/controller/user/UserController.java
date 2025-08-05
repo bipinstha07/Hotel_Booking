@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.List;
 
-@CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/user")
 @AllArgsConstructor
@@ -31,7 +30,7 @@ public class UserController {
     private RoomInterface roomInterface;
     private BookingInterface bookingInterface;
 
-
+// used
     @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<UserDto> create(
             @RequestPart("userDto") String userDto,
@@ -60,12 +59,13 @@ public class UserController {
 
     }
 
-
+//used
     @GetMapping("/rooms")
     public ResponseEntity<List<RoomDto>> getAllRoom(){
         return new ResponseEntity<>(roomInterface.getAll(),HttpStatus.OK);
     }
 
+//    used
     @GetMapping("/{username}/booking")
     public ResponseEntity<List<BookingDto>> getBookingsByUser(@PathVariable String username){
         return new ResponseEntity<>(bookingInterface.getBookingByUser(username),HttpStatus.OK);
