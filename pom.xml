@@ -152,7 +152,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
-		<finalName>${project.artifactId}</finalName>
+		<finalName>springBoot</finalName>
 	</build>
 
 </project>
