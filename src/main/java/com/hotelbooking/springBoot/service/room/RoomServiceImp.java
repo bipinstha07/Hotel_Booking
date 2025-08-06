@@ -7,23 +7,27 @@ import com.hotelbooking.springBoot.entity.RoomType;
 import com.hotelbooking.springBoot.exceptionHandling.ResourceNotFoundException;
 import com.hotelbooking.springBoot.repository.RoomImageRepo;
 import com.hotelbooking.springBoot.repository.RoomRepo;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import lombok.experimental.FieldNameConstants;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.core.ResponseInputStream;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -31,7 +35,6 @@ import java.util.UUID;
 @Service
 @Getter
 @Setter
-@AllArgsConstructor
 public class RoomServiceImp implements RoomInterface {
 
     private final RoomImageRepo roomImageRepo;
@@ -40,6 +43,19 @@ public class RoomServiceImp implements RoomInterface {
     private RoomImageInterface roomImageInterface;
     private RoomImageRepo imageRepo;
     private transient final Logger logger = LoggerFactory.getLogger(RoomServiceImp.class);
+    private S3Client s3Client;
+
+    @Value("${cloud.aws.s3.bucketName}")
+    private String bucketName;
+
+    public RoomServiceImp(S3Client s3Client, RoomRepo roomRepo, RoomImageRepo roomImageRepo, RoomImageInterface roomImageInterface, ModelMapper modelMapper, RoomImageRepo imageRepo) {
+        this.s3Client = s3Client;
+        this.roomRepo = roomRepo;
+        this.roomImageRepo = roomImageRepo;
+        this.roomImageInterface = roomImageInterface;
+        this.modelMapper = modelMapper;
+        this.imageRepo = imageRepo;
+    }
 
 
     @Override
@@ -124,11 +140,21 @@ public class RoomServiceImp implements RoomInterface {
     }
 
     @Override
-    public Resource getImageUrl(String roomId, String imageId) throws MalformedURLException {
+    public Resource getImageUrl(String roomId, String imageId) throws IOException {
         Room room= roomRepo.findById(roomId).orElseThrow(()->new ResourceNotFoundException("No Room Found"));
         RoomImage roomImage = roomImageRepo.findById(imageId).orElseThrow(()->new ResourceNotFoundException("No Image"));
-        Path path = Paths.get(roomImage.getFileName());
-       return  new UrlResource(path.toUri());
+//        Path path = Paths.get(roomImage.getFileName());
+        String key = roomImage.getFileName(); // this should be the S3 key
+        GetObjectRequest getObjectRequest = GetObjectRequest.builder()
+                .bucket(bucketName)
+                .key(key)
+                .build();
+
+        ResponseInputStream<GetObjectResponse> s3Object = s3Client.getObject(getObjectRequest);
+
+        Path tempFile = Files.createTempFile("s3-download-", ".tmp");
+        Files.copy(s3Object, tempFile, StandardCopyOption.REPLACE_EXISTING);
+       return  new UrlResource(tempFile.toUri());
     }
 
 

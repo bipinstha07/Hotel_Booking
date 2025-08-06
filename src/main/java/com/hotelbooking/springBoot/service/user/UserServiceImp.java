@@ -38,6 +38,9 @@ public class UserServiceImp implements UserInterface {
     @Value("${cloud.aws.s3.bucketName}")
     private String bucketName;
 
+    @Value("${userImage.file.path}")
+    private String filepath;
+
     public UserServiceImp(UserRepo userRepo, ModelMapper modelMapper, PasswordEncoder passwordEncoder, S3Client s3Client, UserImageInterface userImageInterface) {
         this.userRepo = userRepo;
         this.modelMapper = modelMapper;
@@ -86,7 +89,7 @@ public class UserServiceImp implements UserInterface {
         Path path;
 
         if(!userImage.isActualImage()){
-            path = Path.of("uploads/userImage/1745900042295.jpeg");
+            path = Path.of("uploads/userImage/image8.jpg");
         }
 
         else{

@@ -65,7 +65,8 @@ public class SecurityConfig {
                                         "/user/rooms",
                                         "/user/booking/create",
                                         "/user/booking/confirm",
-                                        "/user/*"
+                                        "/user/*",
+                                        "/user/image/*"
                                 ).permitAll()
                                 .requestMatchers("/user/update/*","/user/*/booking","/user/image/*").hasAnyAuthority("CUSTOMER","ADMIN")
                                 .requestMatchers("/admin/room/create",

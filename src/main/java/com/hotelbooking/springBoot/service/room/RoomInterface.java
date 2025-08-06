@@ -17,5 +17,5 @@ public interface RoomInterface {
     void deleteById(String roomId);
     RoomDto getById(String roomId);
     List<String> getImageUrlsByRoomId(String roomId);
-    Resource getImageUrl(String roomId, String imageId) throws MalformedURLException;
+    Resource getImageUrl(String roomId, String imageId) throws IOException;
 }

@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -27,7 +30,11 @@ public class RoomImageImp implements RoomImageInterface{
     @Autowired
     private ModelMapper modelMapper;
 
+    @Autowired
+    private S3Client s3Client;
 
+    @Value("${cloud.aws.s3.bucketName}")
+    private String bucketName;
 
     @Override
     public List<RoomImage> upload(List<MultipartFile> files, String roomId) throws IOException {
@@ -39,6 +46,15 @@ public class RoomImageImp implements RoomImageInterface{
 
         for(MultipartFile file:files){
             String fullFileName = imagePath+ file.getOriginalFilename();
+            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(fullFileName)
+                    .contentType(file.getContentType())
+                    .build();
+
+            s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
+//AWS S3
+
             Files.copy(file.getInputStream(),Paths.get(fullFileName), StandardCopyOption.REPLACE_EXISTING);
             RoomImageDto roomImageDto = new RoomImageDto();
             roomImageDto.setId(UUID.randomUUID().toString());
