@@ -123,7 +123,7 @@ public class BookingServiceImp implements BookingInterface {
             String subject = "Room Booking Request Received: BookingId: "+ savedBooking.getId();
 
 
-//            sendEmailService.sendEmail(savedBooking.getCustomerEmail(), body, subject);
+            sendEmailService.sendEmail(savedBooking.getCustomerEmail(), body, subject);
 
         logger.info("Booking Proceed for Id: {} with Name {} and email {} ",savedBooking.getId(),savedBooking.getCustomerName(),savedBooking.getCustomerEmail());
 
@@ -186,7 +186,7 @@ public String getPaymentBooking( Map<String, String> data){
 
                String subject = "Room Booking Update for BookingId: " + booking.getId();
 
-//               sendEmailService.sendEmail(booking.getCustomerEmail(), body, subject);
+               sendEmailService.sendEmail(booking.getCustomerEmail(), body, subject);
            }
            logger.info("Booking Status Changed for ID: {} to {}",booking.getId(),booking.getBookingStatus());
        }
