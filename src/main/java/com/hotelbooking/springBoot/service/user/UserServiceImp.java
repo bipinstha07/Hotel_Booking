@@ -7,27 +7,45 @@ import com.hotelbooking.springBoot.exceptionHandling.ResourceNotFoundException;
 import com.hotelbooking.springBoot.repository.UserRepo;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.UrlResource;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.core.ResponseInputStream;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.GetObjectRequest;
+import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
-@AllArgsConstructor
 public class UserServiceImp implements UserInterface {
 
     private final PasswordEncoder passwordEncoder;
-    private UserRepo userRepo;
-    private ModelMapper modelMapper;
-    private UserImageInterface userImageInterface;
+    private final UserRepo userRepo;
+    private final ModelMapper modelMapper;
+    private final UserImageInterface userImageInterface;
+    private final S3Client s3Client;
+
+    @Value("${cloud.aws.s3.bucketName}")
+    private String bucketName;
+
+    public UserServiceImp(UserRepo userRepo, ModelMapper modelMapper, PasswordEncoder passwordEncoder, S3Client s3Client, UserImageInterface userImageInterface) {
+        this.userRepo = userRepo;
+        this.modelMapper = modelMapper;
+        this.passwordEncoder = passwordEncoder;
+        this.s3Client = s3Client;
+        this.userImageInterface = userImageInterface;
+    }
+
 
     @Override
     public UserDto create(UserDto userDto, MultipartFile image) throws IOException {
@@ -59,7 +77,7 @@ public class UserServiceImp implements UserInterface {
     }
 
     @Override
-    public UserImageWithResource getUserWithImageById(String userEmail) throws MalformedURLException {
+    public UserImageWithResource getUserWithImageById(String userEmail) throws IOException {
 
         User user = userRepo.findByEmail(userEmail).orElse(null);
         if (user == null) throw new ResourceNotFoundException("User not found");
@@ -72,7 +90,19 @@ public class UserServiceImp implements UserInterface {
         }
 
         else{
-            path = Paths.get(userImage.getFileName());
+//            Locally
+//            path = Paths.get(userImage.getFileName());
+            String key = userImage.getFileName(); // this should be the S3 key
+            GetObjectRequest getObjectRequest = GetObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(key)
+                    .build();
+
+            ResponseInputStream<GetObjectResponse> s3Object = s3Client.getObject(getObjectRequest);
+
+            Path tempFile = Files.createTempFile("s3-download-", ".tmp");
+            Files.copy(s3Object, tempFile, StandardCopyOption.REPLACE_EXISTING);
+            path = tempFile;
         }
 
 

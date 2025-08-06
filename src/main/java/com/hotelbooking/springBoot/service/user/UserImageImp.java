@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -22,6 +25,12 @@ public class UserImageImp implements UserImageInterface {
 
     @Value("${userImage.file.path}")
     private String imagePath;
+
+    @Value("${cloud.aws.s3.bucketName}")
+    private String bucketName;
+
+    @Autowired
+    private S3Client s3Client;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -51,7 +60,16 @@ public class UserImageImp implements UserImageInterface {
 
         else{
             String fullFileName = imagePath+ file.getOriginalFilename();
-            Files.copy(file.getInputStream(),Paths.get(fullFileName), StandardCopyOption.REPLACE_EXISTING);
+//            For locally
+//            Files.copy(file.getInputStream(),Paths.get(fullFileName), StandardCopyOption.REPLACE_EXISTING);
+            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(fullFileName)
+                    .contentType(file.getContentType())
+                    .build();
+
+            s3Client.putObject(putObjectRequest, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
+//AWS S3
             UserImageDto userImageDto = new UserImageDto();
             userImageDto.setId(UUID.randomUUID().toString());
             userImageDto.setFileName(fullFileName);

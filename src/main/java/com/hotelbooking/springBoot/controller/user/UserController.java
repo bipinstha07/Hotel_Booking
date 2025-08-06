@@ -52,7 +52,7 @@ public class UserController {
 
 
     @GetMapping("/image/{getUserByEmail}")
-    public ResponseEntity<Resource> getUserWithImageById(@PathVariable String getUserByEmail) throws MalformedURLException {
+    public ResponseEntity<Resource> getUserWithImageById(@PathVariable String getUserByEmail) throws IOException {
         return ResponseEntity.ok()
                 .contentType(MediaType.parseMediaType(userInterface.getUserWithImageById(getUserByEmail).userImageDto().getFileType()))
                 .body(userInterface.getUserWithImageById(getUserByEmail).resource());
