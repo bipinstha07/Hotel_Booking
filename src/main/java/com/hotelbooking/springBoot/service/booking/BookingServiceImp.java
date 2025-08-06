@@ -172,7 +172,7 @@ public String getPaymentBooking( Map<String, String> data){
                        "Dear %s,\n\n" +
                                "Your booking for a %s room has been updated.\n\n" +
                                "Check-in Date: %s\n" +
-                               "Check-out Date: %s\n\n" +
+                               "Check-out Date: %s\n" +
                                "Updated Status: %s\n\n" +
                                "Thank you for booking with us.\n\n" +
                                "Best regards,\n" +
