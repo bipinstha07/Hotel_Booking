@@ -11,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.multipart.support.MissingServletRequestPartException;
+import software.amazon.awssdk.services.s3.model.S3Exception;
 
 import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.HashMap;
@@ -78,5 +79,15 @@ public class GlobalExceptionHandler {
     }
 
 
+    @ExceptionHandler(S3Exception.class)
+    public ResponseEntity<ErrorResponseDto> handleS3Exception(S3Exception exception){
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto(exception.getMessage(),400,false);
+        return new ResponseEntity<>(errorResponseDto,HttpStatus.BAD_REQUEST);
+    }
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponseDto> handleException(Exception exception){
+        ErrorResponseDto errorResponseDto = new ErrorResponseDto(exception.getMessage(),400,false);
+        return new ResponseEntity<>(errorResponseDto,HttpStatus.BAD_REQUEST);
+    }
 }
