@@ -16,7 +16,6 @@ public class WebConfig {
                         .allowedMethods("GET", "POST","PATCH", "PUT", "DELETE", "OPTIONS")
                         .allowedHeaders("*")
                         .allowCredentials(true);
-
             }
         };
     }

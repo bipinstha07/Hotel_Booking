@@ -80,9 +80,6 @@ public class UserImageImp implements UserImageInterface {
             return  userImage;
         }
 
-// proceed to Files.copy(...)
-
-
     }
 
 }

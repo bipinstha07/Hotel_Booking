@@ -4,7 +4,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.hotelbooking.springBoot.dto.BookingDto;
-import com.hotelbooking.springBoot.entity.Booking;
 import com.hotelbooking.springBoot.service.booking.BookingInterface;
 import com.stripe.exception.StripeException;
 import lombok.AllArgsConstructor;
@@ -12,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.Map;
 
 
@@ -40,11 +38,4 @@ public class BookingController {
        return  new ResponseEntity<>(bookingInterface.getPaymentBooking(data),HttpStatus.OK);
     }
 
-
-
-
-//    @GetMapping("/{userId}/getAll")
-//    public ResponseEntity<List<BookingDto>> getAll(@PathVariable String userId){
-//        return new ResponseEntity<>(bookingInterface.getAllByUser(userId),HttpStatus.OK);
-//    }
 }
