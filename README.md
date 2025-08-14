@@ -6,13 +6,15 @@ This application provides a seamless booking experience with secure authenticati
 ---
 
 ## 🚀 Features
-- **JWT-based Authentication** – Secure login & signup.
-- **JPA Criteria Filtering** – Flexible search & filtering for rooms.
-- **MapStruct DTOs** – Clean and efficient object mapping.
-- **Stripe Payments** – Secure and fast payment processing.
-- **Async Emails** – Booking confirmations & notifications.
-- **Caching** – Faster data access.
-- **Auditing** – Track system changes for security & logs.
+-Secure JWT-based Authentication & Role-based Authorization
+-Spring Boot backend for RESTful API development
+-Hibernate ORM with MySQL database for data persistence
+-Robust exception handling and validation
+-Asynchronous email notifications and Stripe payment integration
+-Admin & customer roles with real-time booking management
+-Building and packaging with Maven
+-Scalable AWS infrastructure (EC2, RDS, S3, API Gateway, Elastic Beanstalk)
+-Automated CI/CD with AWS CodePipeline & CodeBuild
 
 ---
 
@@ -26,7 +28,8 @@ This application provides a seamless booking experience with secure authenticati
 ### **Backend**
 - Spring Boot  
 - Hibernate / JPA  
-- MapStruct  
+- MySql
+- Jwt Token
 
 ### **Infrastructure**
 - AWS EC2  
@@ -55,22 +58,26 @@ The app is fully deployed on AWS with:
 
 ## 📦 Installation
 
-### **Backend**
 ```bash
-git clone <backend-repo-url>
+git clone [<backend-repo-url>](https://github.com/bipinstha07/Hotel_Booking)
 cd backend
 ./mvnw spring-boot:run
 
 
 Frontend
 bash
-git clone <frontend-repo-url>
+git clone [<frontend-repo-url>](https://github.com/bipinstha07/Hotel_Booking_Frontend)
 cd frontend
 npm install
 npm run dev
 
 🔐 Environment Variables
 Create .env files for frontend and backend with:
+Frontend
+NEXT_PUBLIC_API_URL=
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=
+
+Backend
 JWT_SECRET=
 STRIPE_SECRET_KEY=
 AWS_ACCESS_KEY_ID=
@@ -79,6 +86,3 @@ AWS_REGION=
 DB_URL=
 DB_USERNAME=
 DB_PASSWORD=
-
-
-If you want, I can make this README **GitHub-ready** by adding badges, a live demo link, and better screenshot placeholders.
