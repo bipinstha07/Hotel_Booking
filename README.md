@@ -57,7 +57,7 @@ The app is fully deployed on AWS with:
 ---
 
 ## 📦 Installation
-
+Backend
 ```bash
 git clone [<backend-repo-url>](https://github.com/bipinstha07/Hotel_Booking)
 cd backend
