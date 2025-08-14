@@ -57,17 +57,18 @@ The app is fully deployed on AWS with:
 ---
 
 ## 📦 Installation
+```
 Backend
-```bash
+bash
 git clone [<backend-repo-url>](https://github.com/bipinstha07/Hotel_Booking)
-cd backend
+cd Hotel_Booking
 ./mvnw spring-boot:run
 
 
 Frontend
 bash
 git clone [<frontend-repo-url>](https://github.com/bipinstha07/Hotel_Booking_Frontend)
-cd frontend
+cd Hotel_Booking_Frontend
 npm install
 npm run dev
 
