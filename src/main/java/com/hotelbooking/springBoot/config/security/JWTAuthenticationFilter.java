@@ -35,7 +35,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
 //        client sends request with header authorization it contains all the header details
         String authorizationHeader = request.getHeader("Authorization");
-        logger.info("Authorization Request");
+
 
         String username = null;
         String token = null;
@@ -63,11 +63,6 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
                         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails,null,grantedAuthorities);
                         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                         SecurityContextHolder.getContext().setAuthentication(authentication);
-
-                        authentication.getAuthorities().forEach(a -> System.out.println("Role in filter: " + a.getAuthority()));
-
-
-                        logger.info("Authenticated");
                     }
                 }
 
@@ -81,7 +76,7 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
         }
         else{
-            logger.error("Invalid or Missing Authorization header for request to : {}",request.getRequestURI());
+
         }
 
         filterChain.doFilter(request,response);

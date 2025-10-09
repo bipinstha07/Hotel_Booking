@@ -32,6 +32,11 @@ public class BookingController {
     }
 
 
+    @DeleteMapping("/delete")
+    public void deleteBooking(@RequestBody  String bookingId){
+        bookingInterface.deletebooking(bookingId);
+
+    }
 
     @PostMapping("/confirm")
     public ResponseEntity<String> confirmBooking(@RequestBody Map<String, String> data) {

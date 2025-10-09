@@ -60,6 +60,9 @@ public class BookingServiceImp implements BookingInterface {
     public Map<String,String> addBooking(BookingDto bookingDto) throws StripeException {
         Room room = roomRepo.findById(bookingDto.getRoomId()).orElseThrow(()-> new ResourceNotFoundException("No Room Found"));
         LocalDate localDate = LocalDate.now();
+        System.out.println(bookingDto.getCheckInDate());
+        System.out.println(bookingDto.getCheckOutDate());
+        System.out.println(localDate);
     if(bookingDto.getCheckInDate().isBefore(localDate) ||
             bookingDto.getCheckOutDate().isBefore(bookingDto.getCheckInDate()) ||
             bookingDto.getCheckOutDate().isBefore(localDate) ){
@@ -103,28 +106,6 @@ public class BookingServiceImp implements BookingInterface {
 //        Payment Closed
         Booking savedBooking = bookingRepo.save(booking);
 
-
-            String body = String.format(
-                    "Dear %s,\n\n" +
-                            "Your request to book a %s room has been received.\n\n" +
-                            "Check-in Date: %s\n" +
-                            "Check-out Date: %s\n\n" +
-                            "Status: Pending\n\n" +
-                            "You will be notified within 24 hours regarding the approval.\n\n" +
-                            "Thank you for choosing us.\n\n" +
-                            "Best regards,\n" +
-                            "Hotel Booking Team",
-                    savedBooking.getCustomerName(),  // Optional, if name is available
-                    room.getRoomType(),
-                    savedBooking.getCheckInDate(),
-                    savedBooking.getCheckOutDate()
-            );
-
-            String subject = "Room Booking Request Received: BookingId: "+ savedBooking.getId();
-
-
-            sendEmailService.sendEmail(savedBooking.getCustomerEmail(), body, subject);
-
         logger.info("Booking Proceed for Id: {} with Name {} and email {} ",savedBooking.getId(),savedBooking.getCustomerName(),savedBooking.getCustomerEmail());
 
         BookingDto bookingDto1 = modelMapper.map(savedBooking,BookingDto.class);
@@ -135,15 +116,40 @@ public class BookingServiceImp implements BookingInterface {
 
 public String getPaymentBooking( Map<String, String> data){
     Booking booking = bookingRepo.findByPaymentIntentId(data.get("paymentIntentId"));
+    Room room = roomRepo.findById(booking.getRoom().getId()).orElseThrow(()-> new ResourceNotFoundException("No Room Found"));
+
     if (booking != null) {
         booking.setPaymentStatus("CONFIRMED");
-        bookingRepo.save(booking);
+        Booking savedBooking =bookingRepo.save(booking);
+        String body = String.format(
+                "Dear %s,\n\n" +
+                        "Your request to book a %s room has been received.\n\n" +
+                        "Check-in Date: %s\n" +
+                        "Check-out Date: %s\n\n" +
+                        "Status: Pending\n\n" +
+                        "You will be notified within 24 hours regarding the approval.\n\n" +
+                        "Thank you for choosing us.\n\n" +
+                        "Best regards,\n" +
+                        "Hotel Booking Team",
+                savedBooking.getCustomerName(),  // Optional, if name is available
+                room.getRoomType(),
+                savedBooking.getCheckInDate(),
+                savedBooking.getCheckOutDate()
+        );
+
+        String subject = "Room Booking Request Received: BookingId: "+ savedBooking.getId();
+
+        sendEmailService.sendEmail(savedBooking.getCustomerEmail(), body, subject);
+
+        System.out.println("booking confirmed");
         return "Booking Confirmed";
     }
     else{
         return "Invalid Payment";
     }
 }
+
+
 
 
     @Override
@@ -153,6 +159,13 @@ public String getPaymentBooking( Map<String, String> data){
       List<BookingDto> bookingDtos = booking.stream().map((book)-> modelMapper.map(book,BookingDto.class)).toList();
       logger.info("All Booking Requested");
       return bookingDtos;
+    }
+
+    @Override
+    public void deletebooking(String bookingId) {
+        Booking booking = bookingRepo.findBookingsById(bookingId);
+        bookingRepo.delete(booking);
+        logger.info("Deletion Success for {} with Check-in Date {} and Check-out Date {}",booking.getCustomerName(),booking.getCheckInDate(),booking.getCheckOutDate());
     }
 
     @Override
