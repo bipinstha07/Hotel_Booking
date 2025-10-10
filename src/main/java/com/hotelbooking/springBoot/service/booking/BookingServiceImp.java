@@ -169,6 +169,35 @@ public String getPaymentBooking( Map<String, String> data){
     }
 
     @Override
+    public void updateBookingPaymentStatus(String bookingId, String paymentStatus) {
+        Booking booking = bookingRepo.findBookingsById(bookingId);
+        booking.setPaymentStatus("PENDING");
+        bookingRepo.save(booking);
+        String body = String.format(
+                "Dear %s,\n\n" +
+                        "Your booking for a room is in payment pending status \n" +
+                        "Check-in Date: %s\n" +
+                        "Check-out Date: %s\n" +
+                        "Kindly use this booking id for payment: %s\n\n"+
+                        "https://hotel-booking/payment/booking/%s\n\n"+
+                        "Thank you for booking with us.\n\n" +
+                        "Best regards,\n" +
+                        "Hotel Booking Team",
+                booking.getCustomerName(),
+                booking.getCheckInDate(),
+                booking.getCheckOutDate(),
+                booking.getId(),
+                booking.getId()
+        );
+
+        String subject = "Room Booking Payment Pending: " + booking.getId();
+        System.out.println(bookingId+"  --"+ paymentStatus+ "---- "+ booking.getCustomerName());
+        sendEmailService.sendEmail(booking.getCustomerEmail(), body, subject);
+
+
+    }
+
+    @Override
     public List<BookingDto> getAllByUser(String userId) {
         return List.of();
     }

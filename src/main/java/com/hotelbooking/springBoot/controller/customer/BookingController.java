@@ -38,6 +38,12 @@ public class BookingController {
 
     }
 
+    @PatchMapping("/paylater/{bookingId}")
+    public ResponseEntity<String> payLater(@RequestBody String paymentStatus, @PathVariable String bookingId){
+        bookingInterface.updateBookingPaymentStatus(bookingId,paymentStatus);
+        return new ResponseEntity<>("Pending Payment",HttpStatus.OK);
+    }
+
     @PostMapping("/confirm")
     public ResponseEntity<String> confirmBooking(@RequestBody Map<String, String> data) {
        return  new ResponseEntity<>(bookingInterface.getPaymentBooking(data),HttpStatus.OK);

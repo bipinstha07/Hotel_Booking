@@ -10,6 +10,8 @@ public interface BookingInterface {
     Map<String,String> addBooking(BookingDto bookingDto) throws StripeException;
     List<BookingDto> getAll();
     void deletebooking(String bookingId);
+    void updateBookingPaymentStatus(String bookingId,String paymentStatus);
+
     List<BookingDto> getAllByUser(String userId);
     void updateBookingStatus(String bookingId,String bookingStatus);
     List<BookingDto> getBookingByUser(String username);
